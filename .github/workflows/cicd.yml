@@ -1,0 +1,25 @@
+name: cicd
+
+on: push # event that trigger the CI / CD jobs 
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: checkout@v2 # checkout the code
+
+      - name: Setup nodejs
+        uses: actions/setup-node@v2 # setup the nodejs environment
+
+      - name: Download Dependencies
+        run: npm install # install all the dependencies defined in the package-json
+
+      - name: Run tests
+        run: npm run test # run the ava tests 
+
+      - name: Cypress Run
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm start # start the server
+          wait-on: 'http://localhost:8000/docs' # run the cypress tests on our server
