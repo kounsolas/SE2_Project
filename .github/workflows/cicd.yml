@@ -11,6 +11,8 @@ jobs:
 
       - name: Setup nodejs
         uses: actions/setup-node@v2 # setup the nodejs environment
+        with:
+          node-version: 16
 
       - name: Download Dependencies
         run: npm install # install all the dependencies defined in the package-json
