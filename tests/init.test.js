@@ -1,7 +1,6 @@
-import http from "node:http"
-import test from "ava"
-import got from "got"
-
+const http = require('http');
+const test = require('ava');
+const got = require('got');
 
 test("Test passes", (t) => {
 	t.pass();
