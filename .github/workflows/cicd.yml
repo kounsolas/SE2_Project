@@ -11,9 +11,16 @@ jobs:
 
       - name: Setup nodejs
         uses: actions/setup-node@v2 # setup the nodejs environment
+        with:
+          node-version: 16
 
       - name: Download Dependencies
         run: npm install # install all the dependencies defined in the package-json
+        
+      - name: Set permissions for ava and c8
+        run: |
+          chmod +x ./node_modules/.bin/ava
+          chmod +x ./node_modules/.bin/c8
 
       - name: Run tests
         run: npm run test # run the ava tests 
