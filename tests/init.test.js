@@ -15,31 +15,32 @@ test('Async' , async(t) => {
 }); 
 
 test.before(async (t) => {
-	t.context.server = http.createServer(app); // create the server
+	try{
+		t.context.server = http.createServer(app); // create the server
 
-	const server = t.context.server.listen(); // Start listening on a random port
+		const server = t.context.server.listen(); // Start listening on a random port
+	
+		const { port } = server.address();
+	
+		t.context.got = got.extend({responseType: "json", prefixUrl: `http://localhost:${port}`}); // Configure got to target the test server
+	} catch(err){
+		console.error('Error during setup: ', err);
+		throw err; 
+	}
 
-	const { port } = server.address();
-
-	t.context.got = got.extend({responseType: "json", prefixUrl: `http://localhost:${port}`}); // Configure got to target the test server
 });
 
-test.after.always((t) => {
-	t.context.server.close();
+test.after.always(async (t) => {
+	try{
+		await t.context.server.close();
+	} catch(err) {
+		console.error('Error closing the server: ', err);
+		throw err;
+	}
+	
 });
 
-test('Get /search returns correct response and status code', async(t) => {
-	const {body, statusCode} = await t.context.got("search"); // Send GET request to /search endpoint (from the search controller)
-	t.deepEqual(body, [
-		{
-			address: 'Leoforou Stratou 34',
-			restaurantName: 'Mamalouka',
-		},
-		{
-			address: 'Tsimiski 20',
-			restaurantName: 'Estrella',
-		},
-	]);
-	console.log('Test: Received response:', body);
-	t.is(statusCode, 200); 
-})
+module.exports ={
+	app, // Export the app
+	got: (testInstance) => testInstance.context.got,
+};

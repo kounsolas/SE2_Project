@@ -10,7 +10,10 @@ module.exports.searchGET = function searchGET (req, res, next) {
       utils.writeJson(res, response);
     })
     .catch(function (response) {
-      console.error('Controller: Error occurred:', error);
       utils.writeJson(res, response);
+    })
+    .catch(function (error) {
+      console.error('Controller: Error occurred:', error);
+      res.status(500).json({error: 'Server Error'});
     });
 };
