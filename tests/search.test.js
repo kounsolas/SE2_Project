@@ -23,6 +23,7 @@ test('Get /search returns correct structure', async (t) => {
     }
 });
 
+
 test('Get /search returns correct response and status code', async(t) => {
 	try {
         const {body, statusCode} = await t.context.got("search"); // Send GET request to /search endpoint (from the search controller)
@@ -43,6 +44,7 @@ test('Get /search returns correct response and status code', async(t) => {
         throw err;
     }
 });
+
 
 // testing POST method
 test('POST /search returns 405 method not allowed', async(t) => {

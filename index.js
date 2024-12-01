@@ -13,7 +13,7 @@ const options = {
     mock: true,
     routing: {
         controllers: path.join(__dirname, './controllers')
-    },
+    }
 };
 
 const expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/openapi.yaml'), options);
