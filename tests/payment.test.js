@@ -92,6 +92,7 @@ test.serial('POST /payBookingFee fails when "cardNumber" is missing', async (t) 
     t.is(error.message, 'Response code 400 (Bad Request)');
 });
 
+
 test.serial('POST /payBookingFee fails when everything is missing', async (t) => {
     const requestBody = {
         "cardHolderName": null,
