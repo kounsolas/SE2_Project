@@ -14,10 +14,12 @@ let preOrders = [
  **/
 exports.preOrderGET = function() {
   return new Promise(function(resolve, reject) {
+
     // Check if there are any preorders
     if (preOrders.length > 0) {
       // Resolve with the current list of preorders
       resolve(preOrders);
+
     } else {
       // Resolve with an empty array if no preorders exist
       resolve([]);
