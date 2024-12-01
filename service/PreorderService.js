@@ -1,5 +1,11 @@
 'use strict';
 
+// In-memory storage for preorders (this will reset when the server restarts)
+// Sample data to initialize preOrders
+let preOrders = [
+  { price: 7, name: "salat", id: "105", restaurant_name: "Mamalouka" },
+  { price: 8, name: "pasta", id: "110", restaurant_name: "Pastabar" }
+];
 
 /**
  * Retrieve a list of menu items
@@ -8,27 +14,16 @@
  **/
 exports.preOrderGET = function() {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ 
-  {
-  "price" : 7,
-  "name" : "salat",
-  "id" : "105",
-  "restaurant_name" : "Mamalouka"
-  }, 
-  {
-  "price" : 8,
-  "name" : "pasta",
-  "id" : "110",
-  "restaurant_name" : "Pastabar"
-  } ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
+    // Check if there are any preorders
+    if (preOrders.length > 0) {
+      // Resolve with the current list of preorders
+      resolve(preOrders);
     } else {
-      resolve();
+      // Resolve with an empty array if no preorders exist
+      resolve([]);
     }
   });
-}
+};
 
 
 /**
@@ -103,8 +98,22 @@ exports.preOrderIdPUT = function(body,restaurant_name,id) {
  **/
 exports.preOrderPOST = function(body) {
   return new Promise(function(resolve, reject) {
-    // Here you would typically insert the new preorder into a database.
-    // For demonstration purposes, we'll simply return the body as is.
+    // Check for missing required fields
+    const missingFields = [];
+    if (!body.price) missingFields.push('price');
+    if (!body.name) missingFields.push('name');
+    if (!body.id) missingFields.push('id');
+    if (!body.restaurant_name) missingFields.push('restaurant_name');
+
+    if (missingFields.length > 0) {
+      // If any fields are missing, reject with an error
+      const error = {
+        statusCode: 400,
+        message: `Missing required fields: ${missingFields.join(', ')}`
+      };
+      reject(error);
+      return;
+    }
 
     // Assuming body contains the new preorder data
     const newPreOrder = {
@@ -114,9 +123,12 @@ exports.preOrderPOST = function(body) {
       restaurant_name: body.restaurant_name
     };
 
-    // You can also add logic here to store the new preorder in memory or a database
+    // Add the new preorder to the in-memory storage
+    preOrders.push(newPreOrder);
 
     // Resolve with the newly created preorder object
     resolve(newPreOrder);
   });
-}
+};
+
+
