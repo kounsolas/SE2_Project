@@ -1,6 +1,7 @@
 const test = require('ava');  //import the ava framework used for running tests
 const got = require('./init.test.js');   //import the custom got instance defined in "init.tests.js"
 
+
 // define a new test with the name POST /payBookingfee successful
 // SUCCESS CASE: The request should return a 200 status code and a JSON object with the key "success" set to true.
 test('POST /payBookingfee successful ', async (t) => 
