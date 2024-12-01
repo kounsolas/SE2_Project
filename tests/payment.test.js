@@ -1,5 +1,5 @@
-const test = require('ava');
-const got = require('./init.test.js');
+const test = require('ava');  //import the ava framework used for running tests
+const got = require('./init.test.js');   //import the custom got instance defined in "init.tests.js"
 
 test('POST /payBookingFee successful ', async (t) => {
     const requestBody = {
@@ -15,10 +15,10 @@ test('POST /payBookingFee successful ', async (t) => {
         });
     
         console.log('Response Status:', response.statusCode);
-        console.log('Response Body:', response.body);
+        console.log('Response Body:', response.body);   
     
-        t.is(response.statusCode, 200);
-        t.deepEqual(response.body, { success: true });
+        t.is(response.statusCode, 200); // Check if the status code is 200
+        t.deepEqual(response.body, { success: true });  // Assert the response body matches the expected result
     } catch(err){
         console.error('Error: ', err.response.body);
         t.fail('Request failed with error: ', +err.message);
