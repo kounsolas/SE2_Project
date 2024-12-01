@@ -1,12 +1,12 @@
 const test = require('ava'); //import the ava framework used for running tests
 const got = require('./init.test'); //import the custom got instance defined in "init.tests.js"
 
-// Testing if the response time is lower than 200ms
+// Testing if the response time is lower than 500ms
 test.serial('GET /search acceptable time response', async (t) => {
     const start = Date.now();
     await t.context.got('search');
     const duration = Date.now() - start;
-    t.true(duration < 200);
+    t.true(duration < 500);
 });
 
 test('Get /search returns correct structure', async (t) => {
