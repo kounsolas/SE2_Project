@@ -195,26 +195,165 @@ test.serial('Post /preorder successful', async(t) => {
 //     }
 // });
 
-test('POST /preorder fails when required fields are missing', async (t) => {
-    const incompleteRequestBody = {
-      name: "meat", // Missing price, id, and restaurant_name
-    };
+// test('POST /preorder fails when required fields are missing', async (t) => {
+//     const incompleteRequestBody = {
+//       name: "meat", // Missing price, id, and restaurant_name
+//     };
   
-    const error = await t.throwsAsync(() =>
-      t.context.got.post("preorder", {
-        json: incompleteRequestBody,
-        responseType: "json",
-      })
-    );
+//     const error = await t.throwsAsync(() =>
+//       t.context.got.post("preorder", {
+//         json: incompleteRequestBody,
+//         responseType: "json",
+//       })
+//     );
   
-    t.is(error.response.statusCode, 400);
-    t.is(
-      error.response.body.message,
-      "Missing required field(s): price id restaurant_name"
-    );
-  });
+//     t.is(error.response.statusCode, 400);
+//     t.is(
+//       error.response.body.message,
+//       "Missing required field(s): price id restaurant_name"
+//     );
+//   });
   
 
+test('POST /preorder fails when required fields are missing', async (t) => {
+    const testCases = [
+        {
+            description: 'missing "price"',
+            requestBody: {
+                name: "meat",
+                id: "106",
+                restaurant_name: "Restaurant"
+            },
+            missingFields: ["price"]
+        },
+        {
+            description: 'missing "name"',
+            requestBody: {
+                price: 9,
+                id: "106",
+                restaurant_name: "Restaurant"
+            },
+            missingFields: ["name"]
+        },
+        {
+            description: 'missing "id"',
+            requestBody: {
+                price: 9,
+                name: "meat",
+                restaurant_name: "Restaurant"
+            },
+            missingFields: ["id"]
+        },
+        {
+            description: 'missing "restaurant_name"',
+            requestBody: {
+                price: 9,
+                name: "meat",
+                id: "106"
+            },
+            missingFields: ["restaurant_name"]
+        },
+        {
+            description: 'missing "price" and "name"',
+            requestBody: {
+                id: "106",
+                restaurant_name: "Restaurant"
+            },
+            missingFields: ["price", "name"]
+        },
+        {
+            description: 'missing "price" and "id"',
+            requestBody: {
+                name: "meat",
+                restaurant_name: "Restaurant"
+            },
+            missingFields: ["price", "id"]
+        },
+        {
+            description: 'missing "price" and "restaurant_name"',
+            requestBody: {
+                name: "meat",
+                id: "106"
+            },
+            missingFields: ["price", "restaurant_name"]
+        },
+        {
+            description: 'missing "name" and "id"',
+            requestBody: {
+                price: 9,
+                restaurant_name: "Restaurant"
+            },
+            missingFields: ["name", "id"]
+        },
+        {
+            description: 'missing "name" and "restaurant_name"',
+            requestBody: {
+                price: 9,
+                id: "106"
+            },
+            missingFields: ["name", "restaurant_name"]
+        },
+        {
+            description: 'missing "id" and "restaurant_name"',
+            requestBody: {
+                price: 9,
+                name: "meat"
+            },
+            missingFields: ["id", "restaurant_name"]
+        },
+        {
+            description: 'missing "price", "name", and "id"',
+            requestBody: {
+                restaurant_name: "Restaurant"
+            },
+            missingFields: ["price", "name", "id"]
+        },
+        {
+            description: 'missing "price", "name", and "restaurant_name"',
+            requestBody: {
+                id: "106"
+            },
+            missingFields: ["price", "name", "restaurant_name"]
+        },
+        {
+            description: 'missing "price", "id", and "restaurant_name"',
+            requestBody: {
+                name: "meat"
+            },
+            missingFields: ["price", "id", "restaurant_name"]
+        },
+        {
+            description: 'missing "name", "id", and "restaurant_name"',
+            requestBody: {
+                price: 9
+            },
+            missingFields: ["name", "id", "restaurant_name"]
+        },
+        {
+            description: 'missing all fields',
+            requestBody: {},
+            missingFields: ["price", "name", "id", "restaurant_name"]
+        }
+    ];
+
+    for (const testCase of testCases) {
+        const { description, requestBody, missingFields } = testCase;
+
+        const error = await t.throwsAsync(() =>
+            t.context.got.post('preorder', {
+                json: requestBody,
+                responseType: 'json'
+            })
+        );
+
+        t.is(error.response.statusCode, 400, `Status code mismatch for: ${description}`);
+        t.is(
+            error.response.body.message,
+            `Missing required field(s): ${missingFields.join(' ')}`,
+            `Error message mismatch for: ${description}`
+        );
+    }
+});
 
 
 
