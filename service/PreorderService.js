@@ -9,17 +9,20 @@
 exports.preOrderGET = function() {
   return new Promise(function(resolve, reject) {
     var examples = {};
-    examples['application/json'] = [ {
-  "price" : 7,
-  "name" : "salat",
-  "id" : "105",
-  "restaurant_name" : "Mamalouka"
-}, {
-  "price" : 7,
-  "name" : "salat",
-  "id" : "105",
-  "restaurant_name" : "Mamalouka"
-} ];
+    examples['application/json'] = [ 
+  {
+    "price" : 7,
+    "name" : "salat",
+    "id" : "105",
+    "restaurant_name" : "Mamalouka"
+  }, 
+  {
+    "price" : 7,
+    "name" : "salat",
+    "id" : "105",
+    "restaurant_name" : "Mamalouka"
+  } 
+];
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {

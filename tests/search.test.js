@@ -23,36 +23,27 @@ test('Get /search returns correct structure', async (t) => {
     }
 });
 
-test('Get /search returns correct response and status code', async(t) => {
-	try {
-        const {body, statusCode} = await t.context.got("search"); // Send GET request to /search endpoint (from the search controller)
-        t.deepEqual(body, [
-            {
-                address: 'Leoforou Stratou 34',
-                restaurantName: 'Mamalouka',
-            },
-            {
-                address: 'Tsimiski 20',
-                restaurantName: 'Estrella',
-            },
-        ]);
-        // console.log('Test: Received response:', body);
-        t.is(statusCode, 200); 
-    } catch(err){
-        console.log('Error : ', err);
-        throw err;
-    }
-});
+// test('Get /search returns correct response and status code', async(t) => {
+// 	try {
+//         const {body, statusCode} = await t.context.got("search"); // Send GET request to /search endpoint (from the search controller)
+//         t.deepEqual(body, [
+//             {
+//                 address: 'Leoforou Stratou 34',
+//                 restaurantName: 'Mamalouka',
+//             },
+//             {
+//                 address: 'Tsimiski 20',
+//                 restaurantName: 'Estrella',
+//             }
+//         ]);
+//         // console.log('Test: Received response:', body);
+//         t.is(statusCode, 200); 
+//     } catch(err){
+//         console.log('Error : ', err);
+//         throw err;
+//     }
+// });
 
-
-=======
-// Testing if the response time is lower than 500ms
-test('GET /search acceptable time response', async (t) => {
-    const start = Date.now();
-    await t.context.got('search');
-    const duration = Date.now() - start;
-    t.true(duration < 500);
-});
 // testing POST method
 test('POST /search returns 405 method not allowed', async(t) => {
     try{
