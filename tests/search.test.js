@@ -44,8 +44,6 @@ test('Get /search returns correct response and status code', async(t) => {
     }
 });
 
-
-=======
 // Testing if the response time is lower than 500ms
 test('GET /search acceptable time response', async (t) => {
     const start = Date.now();
