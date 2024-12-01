@@ -44,6 +44,15 @@ test('Get /search returns correct response and status code', async(t) => {
     }
 });
 
+
+=======
+// Testing if the response time is lower than 500ms
+test('GET /search acceptable time response', async (t) => {
+    const start = Date.now();
+    await t.context.got('search');
+    const duration = Date.now() - start;
+    t.true(duration < 500);
+});
 // testing POST method
 test('POST /search returns 405 method not allowed', async(t) => {
     try{
