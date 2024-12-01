@@ -195,19 +195,25 @@ test.serial('Post /preorder successful', async(t) => {
 //     }
 // });
 
-test('POST /preorder fails when required fields are missing', async t => {
+test('POST /preorder fails when required fields are missing', async (t) => {
+    const incompleteRequestBody = {
+      name: "meat", // Missing price, id, and restaurant_name
+    };
+  
     const error = await t.throwsAsync(() =>
-        t.context.got.post('preorder', {
-            json: {
-                name: 'meat', // missing "price"
-                id: '106',
-                restaurant_name: 'Restaurant'
-            }
-        })
+      t.context.got.post("preorder", {
+        json: incompleteRequestBody,
+        responseType: "json",
+      })
     );
+  
     t.is(error.response.statusCode, 400);
-    t.is(error.response.body.message, 'Missing required fields: price');
-});
+    t.is(
+      error.response.body.message,
+      "Missing required field(s): price id restaurant_name"
+    );
+  });
+  
 
 
 

@@ -96,39 +96,18 @@ exports.preOrderIdPUT = function(body,restaurant_name,id) {
  * body PreOrder Menu item object that needs to be added
  * returns PreOrder
  **/
-exports.preOrderPOST = function(body) {
-  return new Promise(function(resolve, reject) {
-    // Check for missing required fields
-    const missingFields = [];
-    if (!body.price) missingFields.push('price');
-    if (!body.name) missingFields.push('name');
-    if (!body.id) missingFields.push('id');
-    if (!body.restaurant_name) missingFields.push('restaurant_name');
-
-    if (missingFields.length > 0) {
-      // If any fields are missing, reject with an error
-      const error = {
-        statusCode: 400,
-        message: `Missing required fields: ${missingFields.join(', ')}`
-      };
-      reject(error);
-      return;
-    }
-
-    // Assuming body contains the new preorder data
+exports.preOrderPOST = function (body) {
+  return new Promise((resolve, reject) => {
+    // Create and store the preorder
     const newPreOrder = {
       price: body.price,
       name: body.name,
       id: body.id,
-      restaurant_name: body.restaurant_name
+      restaurant_name: body.restaurant_name,
     };
 
-    // Add the new preorder to the in-memory storage
     preOrders.push(newPreOrder);
-
-    // Resolve with the newly created preorder object
-    resolve(newPreOrder);
+    resolve(newPreOrder); // Return the created preorder
   });
 };
-
 
