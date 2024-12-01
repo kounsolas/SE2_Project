@@ -1,5 +1,5 @@
-const test = require('ava');
-const got = require('./init.test');
+const test = require('ava'); //import the ava framework used for running tests
+const got = require('./init.test'); //import the custom got instance defined in "init.tests.js"
 
 // Testing if the response time is lower than 200ms
 test.serial('GET /search acceptable time response', async (t) => {
@@ -13,15 +13,16 @@ test('Get /search returns correct structure', async (t) => {
     try{
         const {body, statusCode} = await t.context.got('search');
         t.is(statusCode, 200); // Checking if we received the correct status code
-        body.forEach((item) => {
-            t.truthy(item.address);
-            t.truthy(item.restaurantName);
+        body.forEach((item) => { 
+            t.truthy(item.address); // Ensures each result has an address field
+            t.truthy(item.restaurantName); // Ensures each result has a restaurantName field
         });
     } catch(err){
         console.log('Error: ', err);
         throw err;
     }
 });
+
 
 // test('Get /search returns correct response and status code', async(t) => {
 // 	try {
@@ -43,6 +44,7 @@ test('Get /search returns correct structure', async (t) => {
 //         throw err;
 //     }
 // });
+
 
 // testing POST method
 test('POST /search returns 405 method not allowed', async(t) => {
