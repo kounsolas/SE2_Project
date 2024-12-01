@@ -1,6 +1,10 @@
 const test = require('ava');  //import the ava framework used for running tests
 const got = require('./init.test.js');   //import the custom got instance defined in "init.tests.js"
 
+<<<<<<< Christos-Alexandros-Dardampounis
+test('POST /payBookingFee successful ', async (t) => {
+    const requestBody = {
+=======
 
 
 // define a new test with the name POST /payBookingfee successful
@@ -9,6 +13,7 @@ test('POST /payBookingfee successful ', async (t) =>
     // Simulate a successful request to the /payBookingfee endpoint
     {    
     const requestBody = { 
+>>>>>>> main
         "cardHolderName": "John Doe",
         "cardNumber": "1234567891234568",
         "CVC":123,
@@ -30,7 +35,6 @@ test('POST /payBookingfee successful ', async (t) =>
         t.fail('Request failed with error: ', +err.message);
     }
 
-
 });
 
 // define a new test with the name POST /payBookingfee fails when required fields are missing
@@ -44,6 +48,8 @@ test('POST /payBookingFee fails when "CVC" is missing', async (t) => {
     };
 
     const error = await t.throwsAsync(() => t.context.got.post('payBookingFee', {
+<<<<<<< Christos-Alexandros-Dardampounis
+=======
         json: requestBody,
         responseType: 'json'
     }));
@@ -185,6 +191,7 @@ test.serial('POST /payBookingFee fails with overly long card holder name', async
     };
 
     const error = await t.throwsAsync(() => t.context.got.post('payBookingFee', {
+>>>>>>> main
         json: requestBody,
         responseType: 'json'
     }));
@@ -192,6 +199,153 @@ test.serial('POST /payBookingFee fails with overly long card holder name', async
     t.is(error.message, 'Response code 400 (Bad Request)');
 });
 
+<<<<<<< Christos-Alexandros-Dardampounis
+test.serial('POST /payBookingFee fails when "expirationDate" is missing', async (t) => {
+    const requestBody = {
+        "cardHolderName": "John Doe",
+        "cardNumber": "1234567891234568",
+        "CVC": 123
+        // Missing "expirationDate" 
+    };
+
+    const error = await t.throwsAsync(() => t.context.got.post('payBookingFee', {
+        json: requestBody,
+        responseType: 'json'
+    }));
+
+    t.is(error.message, 'Response code 400 (Bad Request)');
+});
+
+test.serial('POST /payBookingFee fails when "cardHolderName" is missing', async (t) => {
+    const requestBody = {
+        //"cardHolderName": "John Doe",
+        "cardNumber": "1234567891234568",
+        "CVC": 123,
+        "expirationDate": "07/2026"
+    };
+
+    const error = await t.throwsAsync(() => t.context.got.post('payBookingFee', {
+        json: requestBody,
+        responseType: 'json'
+    }));
+
+    t.is(error.message, 'Response code 400 (Bad Request)');
+});
+
+test.serial('POST /payBookingFee fails when "cardNumber" is missing', async (t) => {
+    const requestBody = {
+        "cardHolderName": "John Doe",
+        //"cardNumber": "12345678912345680000",
+        "CVC": 123,
+        "expirationDate": "07/2026"
+    };
+
+    const error = await t.throwsAsync(() => t.context.got.post('payBookingFee', {
+        json: requestBody,
+        responseType: 'json'
+    }));
+
+    t.is(error.message, 'Response code 400 (Bad Request)');
+});
+
+test.serial('POST /payBookingFee fails when everything is missing', async (t) => {
+    const requestBody = {
+        "cardHolderName": null,
+        "cardNumber": null,
+        "CVC": null,
+        "expirationDate":null
+    };
+
+    const error = await t.throwsAsync(() => t.context.got.post('payBookingFee', {
+        json: requestBody,
+        responseType: 'json'
+    }));
+
+    t.is(error.message, 'Response code 400 (Bad Request)');
+});
+
+test('PUT /payBookingFee returns 405 method not allowed', async (t) => {
+    const requestBody = { 
+        "cardHolderName": "John Doe",
+        "cardNumber": "1234567891234568",
+        "CVC":123,
+        "expirationDate": "07/2026"
+    };
+
+    try{
+        const error = await t.throwsAsync(() => t.context.got.put('payBookingFee', {
+            json: requestBody,
+            responseType: 'json'
+        }));
+        t.is(error.response.statusCode, 405);
+    } catch(err){
+        console.log('Error : ', err);
+        throw err;
+    }
+});
+
+test('GET /payBookingFee returns 405 method not allowed', async (t) => {
+    try{
+        const error = await t.throwsAsync(() => t.context.got('payBookingFee'));
+        t.is(error.response.statusCode, 405);
+    }  catch(err){
+        console.log('Error: ', err);
+        throw err;
+    }
+
+});
+
+test('DELETE /payBookingFee returns 405 method not allowed', async (t) => {
+    const requestBody = {
+        "cardHolderName": "John Doe",
+        "cardNumber": "1234567891234568",
+        "CVC": 123,
+        "expirationDate": "07/2026"
+    };
+    try{
+        const error = await t.throwsAsync(() => t.context.got.delete('payBookingFee'));
+        t.is(error.response.statusCode, 405);
+    }  catch(err){
+        console.log('Error: ', err);
+        throw err;
+    }
+
+});
+
+test.serial('POST /payBookingFee fails with invalid CVC', async (t) => {
+    const requestBody = {
+        "cardHolderName": "John Doe",
+        "cardNumber": "1234567891234568",
+        "CVC": "ABC",  // Invalid CVC
+        "expirationDate": "07/2026"
+    };
+
+    const error = await t.throwsAsync(() => t.context.got.post('payBookingFee', {
+        json: requestBody,
+        responseType: 'json'
+    }));
+
+    t.is(error.message, 'Response code 400 (Bad Request)');
+});
+
+test.serial('POST /payBookingFee fails with overly long card holder name', async (t) => {
+    const requestBody = {
+        "cardHolderName": "A".repeat(300),  // Excessively long name
+        "cardNumber": "1234567891234568",
+        "CVC": 123,
+        "expirationDate": "07/2026"
+    };
+
+    const error = await t.throwsAsync(() => t.context.got.post('payBookingFee', {
+        json: requestBody,
+        responseType: 'json'
+    }));
+
+    t.is(error.message, 'Response code 400 (Bad Request)');
+});
+
+=======
+>>>>>>> main
 test('POST /payBookingFee fails with invalid card number', async(t) => {
     const requestBody = {
         "cardHolderName": "John Doe",
