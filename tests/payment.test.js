@@ -24,7 +24,6 @@ test('POST /payBookingFee successful ', async (t) => {
         t.fail('Request failed with error: ', +err.message);
     }
 
-
 });
 
 // define a new test with the name POST /payBookingfee fails when required fields are missing
@@ -95,7 +94,10 @@ test.serial('POST /payBookingFee fails when "cardNumber" is missing', async (t) 
 
 test.serial('POST /payBookingFee fails when everything is missing', async (t) => {
     const requestBody = {
-
+        "cardHolderName": null,
+        "cardNumber": null,
+        "CVC": null,
+        "expirationDate":null
     };
 
     const error = await t.throwsAsync(() => t.context.got.post('payBookingFee', {
@@ -103,7 +105,7 @@ test.serial('POST /payBookingFee fails when everything is missing', async (t) =>
         responseType: 'json'
     }));
 
-    t.is(error.message, 'Response code 500 (Internal Server Error)');
+    t.is(error.message, 'Response code 400 (Bad Request)');
 });
 
 test('PUT /payBookingFee returns 405 method not allowed', async (t) => {
