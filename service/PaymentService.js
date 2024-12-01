@@ -10,8 +10,16 @@
  **/
 exports.payBookingFee = function(body) {
   return new Promise(function(resolve, reject) {
+    const requiredFields = ['cardHolderName', 'cardNumber', 'CVC', 'expirationDate'];
+
+    for (const field of requiredFields){
+      if(!body.hasOwnProperty(field)){
+        //console.log('WHATTT!!!!!');
+        return // examples['application/json'] = {error: true};//reject(new Error(`Missing required field: ${field}` ));
+      }
+    }
     var examples = {};
-    examples['application/json'] = true;
+    examples['application/json'] = {success: true};
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {

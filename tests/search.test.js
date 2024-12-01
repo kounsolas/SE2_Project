@@ -1,6 +1,14 @@
 const test = require('ava');
 const got = require('./init.test');
 
+// Testing if the response time is lower than 200ms
+test.serial('GET /search acceptable time response', async (t) => {
+    const start = Date.now();
+    await t.context.got('search');
+    const duration = Date.now() - start;
+    t.true(duration < 200);
+});
+
 test('Get /search returns correct structure', async (t) => {
     try{
         const {body, statusCode} = await t.context.got('search');
@@ -35,13 +43,7 @@ test('Get /search returns correct response and status code', async(t) => {
         throw err;
     }
 });
-// Testing if the response time is lower than 200ms
-test('GET /search acceptable time response', async (t) => {
-    const start = Date.now();
-    await t.context.got('search');
-    const duration = Date.now() - start;
-    t.true(duration < 200);
-});
+
 // testing POST method
 test('POST /search returns 405 method not allowed', async(t) => {
     try{
@@ -81,65 +83,4 @@ test('GET /search returns 404 for non-existent endpoint', async (t) => {
 
     t.is(error.response.statusCode, 404);  
 });
-
-// test('GET /search handles missing data gracefully', async (t) => {
-//     // Mock the service to return an empty array or no data
-//     const originalSearchService = require('../service/SearchService').searchGET;
-//     require('../service/SearchService').searchGET = () => Promise.resolve([]);
-
-//     const {body, statusCode} = await t.context.got('search');
-
-//     t.is(statusCode, 200);  // Ensure it returns a 200 status
-//     t.deepEqual(body, []);   // Check that the body is an empty array (no data)
-
-//     // Restore original service method
-//     require('../service/SearchService').searchGET = originalSearchService;
-// });
-
-// test('searchGET should handle service errors', async (t) => {
-//     // Mock the service to reject with an error
-//     sinon.stub(SearchService, 'searchGET').rejects(new Error('Server Error'));
-
-//     const req = {};
-//     const res = {
-//         status: sinon.stub().returnsThis(),
-//         json: sinon.stub(),
-//     };
-
-//     await SearchController.searchGET(req, res);
-
-//     t.true(res.status.calledWith(500));
-//     t.true(res.json.calledWith({ error: 'Server Error' }));
-
-//     // Restore the original service function
-//     SearchService.searchGET.restore();
-// });
-
-// test('GET /search handles service timeout gracefully', async (t) => {
-//     // Mock the service to simulate a timeout
-//     const originalSearchService = require('../service/SearchService').searchGET;
-//     require('../service/SearchService').searchGET = () => new Promise((_, reject) => setTimeout(() => reject(new Error('Request Timeout')), 1000));
-
-//     const error = await t.throwsAsync(() => t.context.got('search'));
-
-//     t.is(error.response.statusCode, 500);  // Ensure the status code is 500 for server error due to timeout
-
-//     // Restore original service method
-//     require('../service/SearchService').searchGET = originalSearchService;
-// });
-
-
-// test('GET /search handles service error gracefully', async (t) => {
-//     // Mock the service to throw an error
-//     const original = require('../service/SearchService').searchGET;
-//     var newService = require('../service/SearchService').searchGET;
-
-//     newService = () => Promise.reject(new Error('Database error'));
-
-//     const error = await t.throwsAsync(() => t.context.got('search'));
-//     t.is(error.response.statusCode, 500);
-
-//     // Restore original implementation
-//     require('../service/SearchService').searchGET = original;
-// });
 
