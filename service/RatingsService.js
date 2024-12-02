@@ -46,34 +46,26 @@ exports.ratingsIdDELETE = function(id) {
   });
 };
 
-/**
- * Retrieve a specific rating
- *
- * id String 
- * restaurant_name String 
- * returns Ratings
- **/
-exports.ratingsIdGET = function(id, restaurant_name) {
-  return new Promise(function(resolve, reject) {
-    if (!id || !restaurant_name) {
-      reject({ statusCode: 400, message: 'ID and restaurant name are required' });
-      return;
-    }
-
-    var examples = {
-      "user_id": "user32",
-      "rating": 4.5,
-      "restaurant_name": "mamalouka"
+exports.ratingsIdGET = function (id, restaurant_name) {
+  return new Promise(function (resolve, reject) {
+    // Define example data with proper structure
+    const examples = {
+      "user32": {
+        user_id: "user32",
+        rating: 4.5,
+        restaurant_name: "Mamalouka"
+      }
     };
 
-    // Simulate finding a rating
-    if (id === '12345') {
-      resolve(examples);
+    // Check if the ID exists in the example data
+    if (examples[id] && examples[id].restaurant_name === restaurant_name) {
+      resolve(examples[id]); // Return the found rating
     } else {
-      reject({ statusCode: 404, message: 'Rating not found' });
+      reject({ statusCode: 404, message: `Rating with ID '${id}' not found` }); // Return a 404 error
     }
   });
 };
+
 
 /**
  * Update a rating

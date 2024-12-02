@@ -23,7 +23,8 @@ module.exports.ratingsIdDELETE = function ratingsIdDELETE(req, res, next, id) {
     });
 };
 
-module.exports.ratingsIdGET = function ratingsIdGET(req, res, next, id, restaurant_name) {
+module.exports.ratingsIdGET = function ratingsIdGET(req, res, next, restaurant_name, id) {
+  //console.log('Controller params:', { id, restaurant_name });
   Ratings.ratingsIdGET(id, restaurant_name)
     .then(function(response) {
       utils.writeJson(res, response);
@@ -44,8 +45,8 @@ module.exports.ratingsIdPUT = function ratingsIdPUT(req, res, next, body, restau
 };
 
 module.exports.ratingsPOST = function ratingsPOST(req, res, next, body) {
-  const restaurant_name = 'mamalouka'; // Hardcoded value
-  console.log('Received Body in Controller:', body);
+  const restaurant_name = 'Mamalouka'; // Hardcoded value
+  // console.log('Received Body in Controller:', body);
 
   Ratings.ratingsPOST(body, restaurant_name)
     .then(function (response) {
