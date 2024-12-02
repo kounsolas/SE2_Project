@@ -43,17 +43,12 @@ module.exports.ratingsIdPUT = function ratingsIdPUT(req, res, next, body, restau
     });
 };
 
-module.exports.ratingsPOST = function ratingsPOST(req, res, next, body) {
-  const restaurant_name = 'mamalouka'; // Hardcoded value
-  console.log('Received Body in Controller:', body);
-
+module.exports.ratingsPOST = function ratingsPOST(req, res, next, body, restaurant_name) {
   Ratings.ratingsPOST(body, restaurant_name)
-    .then(function (response) {
+    .then(function(response) {
       utils.writeJson(res, response);
     })
-    .catch(function (err) {
-      console.error('Error in Controller:', err);
-      utils.writeJson(res, { message: err.message }, err.statusCode || 500);
+    .catch(function(response) {
+      utils.writeJson(res, { error: response.message }, response.statusCode || 500);
     });
 };
-
