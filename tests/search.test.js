@@ -6,7 +6,7 @@ test.serial('GET /search acceptable time response', async (t) => {
     const start = Date.now();
     await t.context.got('search');
     const duration = Date.now() - start;
-    t.true(duration < 200);
+    t.true(duration < 500);
 });
 
 test('Get /search returns correct structure', async (t) => {

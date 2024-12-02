@@ -46,34 +46,26 @@ exports.ratingsIdDELETE = function(id) {
   });
 };
 
-/**
- * Retrieve a specific rating
- *
- * id String 
- * restaurant_name String 
- * returns Ratings
- **/
-exports.ratingsIdGET = function(id, restaurant_name) {
-  return new Promise(function(resolve, reject) {
-    if (!id || !restaurant_name) {
-      reject({ statusCode: 400, message: 'ID and restaurant name are required' });
-      return;
-    }
-
-    var examples = {
-      "user_id": "user32",
-      "rating": 4.5,
-      "restaurant_name": "mamalouka"
+exports.ratingsIdGET = function (id, restaurant_name) {
+  return new Promise(function (resolve, reject) {
+    // Define example data with proper structure
+    const examples = {
+      "user32": {
+        user_id: "user32",
+        rating: 4.5,
+        restaurant_name: "Mamalouka"
+      }
     };
 
-    // Simulate finding a rating
-    if (id === '12345') {
-      resolve(examples);
+    // Check if the ID exists in the example data
+    if (examples[id] && examples[id].restaurant_name === restaurant_name) {
+      resolve(examples[id]); // Return the found rating
     } else {
-      reject({ statusCode: 404, message: 'Rating not found' });
+      reject({ statusCode: 404, message: `Rating with ID '${id}' not found` }); // Return a 404 error
     }
   });
 };
+
 
 /**
  * Update a rating
@@ -123,5 +115,50 @@ exports.ratingsPOST = function(body, restaurant_name) {
     };
 
     resolve(newRating);
+  });
+};
+
+/**
+ * Create a new rating
+ *
+ * body Ratings Ratings object that needs to be added
+ * restaurant_name String 
+ * returns Ratings
+ **/
+exports.ratingsPOST = function (body, restaurant_name) {
+  return new Promise(function (resolve, reject) {
+    console.log('Received Body in Service:', body);
+    console.log('Received Restaurant Name:', restaurant_name);
+
+    // Validate required fields in the body
+    const requiredFields = ['user_id', 'rating'];
+    for (const field of requiredFields) {
+      if (!body[field]) {
+        console.error(`Missing required field: ${field}`);
+        return reject({
+          statusCode: 400,
+          message: `Missing required field: ${field}`,
+        });
+      }
+    }
+
+    // Validate rating range
+    if (body.rating < 1 || body.rating > 5) {
+      console.error('Invalid rating value');
+      return reject({
+        statusCode: 400,
+        message: 'Rating must be between 1 and 5',
+      });
+    }
+
+    // Create the response object
+    const response = {
+      user_id: body.user_id,
+      rating: body.rating,
+      restaurant_name: restaurant_name || 'mamalouka', // Default to mamalouka
+    };
+
+    console.log('Response:', response);
+    resolve(response);
   });
 };
