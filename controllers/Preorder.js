@@ -44,29 +44,6 @@ module.exports.preOrderIdPUT = function preOrderIdPUT (req, res, next, body, res
 };
 
 
-// module.exports.preOrderPOST = function preOrderPOST(req, res, next, body) {
-//   const { price, name, id, restaurant_name } = body;
-
-//   // Validate required fields
-//   const missingFields = [];
-//   if (!price) missingFields.push('price');
-//   if (!name) missingFields.push('name');
-//   if (!id) missingFields.push('id');
-//   if (!restaurant_name) missingFields.push('restaurant_name');
-
-//   if (missingFields.length > 0) {
-//     const error = { message: `Missing required field(s): ${missingFields.join(' ')}` };
-//     return utils.writeJson(res, error, 400); // Return 400 for bad requests
-//   }
-
-//   Preorder.preOrderPOST(body)
-//     .then((response) => utils.writeJson(res, response))
-//     .catch((err) => {
-//       console.error('Error:', err);
-//       utils.writeJson(res, err, err.statusCode || 500);
-//     });
-// };
-
 module.exports.preOrderPOST = function preOrderPOST(req, res, next, body = {}) {
   const { price, name, id, restaurant_name } = body;
 
