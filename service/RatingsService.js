@@ -1,6 +1,5 @@
 'use strict';
 
-
 /**
  * Retrieve a list of ratings
  *
@@ -9,24 +8,25 @@
  **/
 exports.ratingsGET = function(restaurant_name) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "user_id" : "user32",
-  "rating" : 4.5,
-  "restaurant_name" : "mamalouka"
-}, {
-  "user_id" : "user32",
-  "rating" : 4.5,
-  "restaurant_name" : "mamalouka"
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
+    if (!restaurant_name) {
+      reject({ statusCode: 400, message: 'Restaurant name is required' });
+      return;
     }
+    
+    // Example data, this would typically come from a database
+    var examples = [{
+      "user_id": "user32",
+      "rating": 4.5,
+      "restaurant_name": "mamalouka"
+    }, {
+      "user_id": "user33",
+      "rating": 4.0,
+      "restaurant_name": "mamalouka"
+    }];
+    
+    resolve(examples);
   });
-}
-
+};
 
 /**
  * Delete a rating
@@ -36,10 +36,15 @@ exports.ratingsGET = function(restaurant_name) {
  **/
 exports.ratingsIdDELETE = function(id) {
   return new Promise(function(resolve, reject) {
+    if (!id) {
+      reject({ statusCode: 400, message: 'ID is required' });
+      return;
+    }
+
+    // Simulate successful deletion (in real use, this would interact with a database)
     resolve();
   });
-}
-
+};
 
 /**
  * Retrieve a specific rating
@@ -48,22 +53,27 @@ exports.ratingsIdDELETE = function(id) {
  * restaurant_name String 
  * returns Ratings
  **/
-exports.ratingsIdGET = function(id,restaurant_name) {
+exports.ratingsIdGET = function(id, restaurant_name) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "user_id" : "user32",
-  "rating" : 4.5,
-  "restaurant_name" : "mamalouka"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
+    if (!id || !restaurant_name) {
+      reject({ statusCode: 400, message: 'ID and restaurant name are required' });
+      return;
+    }
+
+    var examples = {
+      "user_id": "user32",
+      "rating": 4.5,
+      "restaurant_name": "mamalouka"
+    };
+
+    // Simulate finding a rating
+    if (id === '12345') {
+      resolve(examples);
     } else {
-      resolve();
+      reject({ statusCode: 404, message: 'Rating not found' });
     }
   });
-}
-
+};
 
 /**
  * Update a rating
@@ -73,43 +83,45 @@ exports.ratingsIdGET = function(id,restaurant_name) {
  * id String 
  * returns Ratings
  **/
-exports.ratingsIdPUT = function(body,restaurant_name,id) {
+exports.ratingsIdPUT = function(body, restaurant_name, id) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "user_id" : "user32",
-  "rating" : 4.5,
-  "restaurant_name" : "mamalouka"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
+    if (!id || !restaurant_name || !body) {
+      reject({ statusCode: 400, message: 'ID, restaurant name, and body are required' });
+      return;
     }
-  });
-}
 
+    // Simulate successful update
+    var updatedRating = {
+      user_id: body.user_id,
+      rating: body.rating,
+      restaurant_name: body.restaurant_name
+    };
+
+    resolve(updatedRating);
+  });
+};
 
 /**
- * Create a new ratings
+ * Create a new rating
  *
  * body Ratings Ratings object that needs to be added
  * restaurant_name String 
  * returns Ratings
  **/
-exports.ratingsPOST = function(body,restaurant_name) {
+exports.ratingsPOST = function(body, restaurant_name) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "user_id" : "user32",
-  "rating" : 4.5,
-  "restaurant_name" : "mamalouka"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
+    if (!restaurant_name || !body) {
+      reject({ statusCode: 400, message: 'Restaurant name and body are required' });
+      return;
     }
-  });
-}
 
+    // Simulate adding a new rating
+    var newRating = {
+      user_id: body.user_id,
+      rating: body.rating,
+      restaurant_name: body.restaurant_name
+    };
+
+    resolve(newRating);
+  });
+};
