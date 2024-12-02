@@ -27,8 +27,6 @@ exports.preOrderGET = function() {
     }
   });
 };
-
-
 /**
  * Delete a menu item
  *
@@ -40,8 +38,6 @@ exports.preOrderIdDELETE = function(id) {
     resolve();
   });
 }
-
-
 /**
  * Retrieve a specific menu item
  *
@@ -65,8 +61,6 @@ exports.preOrderIdGET = function(id,restaurant_name) {
     }
   });
 }
-
-
 /**
  * Update a menu item
  *
@@ -91,8 +85,6 @@ exports.preOrderIdPUT = function(body,restaurant_name,id) {
     }
   });
 }
-
-
 /**
  * Create a new menu item
  *
