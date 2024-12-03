@@ -9,7 +9,7 @@
 exports.searchGET = function simulateError(req) {
   return new Promise(function(resolve, reject) {
     const simulateError = req.query.mockError ==='true' // to enable mock errors
-    // console.log("Simulate Error: ", simulateError);
+    console.log("Simulate Error: ", simulateError);
     
     if(simulateError){
       reject({error: 'Mock error'});

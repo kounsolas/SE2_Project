@@ -15,7 +15,7 @@ exports.payBookingFee = function(body) {
     for (const field of requiredFields){
       if(!body.hasOwnProperty(field)){
         //console.log('WHATTT!!!!!');
-        return; // examples['application/json'] = {error: true};//reject(new Error(`Missing required field: ${field}` ));
+        return // examples['application/json'] = {error: true};//reject(new Error(`Missing required field: ${field}` ));
       }
     }
     var examples = {};

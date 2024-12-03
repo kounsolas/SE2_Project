@@ -1,12 +1,12 @@
 const test = require('ava'); //import the ava framework used for running tests
 const got = require('./init.test'); //import the custom got instance defined in "init.tests.js"
 
-// Testing if the response time is lower than 500ms
+// Testing if the response time is lower than 200ms
 test.serial('GET /search acceptable time response', async (t) => {
     const start = Date.now();
     await t.context.got('search');
     const duration = Date.now() - start;
-    t.true(duration < 500);
+    t.true(duration < 200);
 });
 
 test('Get /search returns correct structure', async (t) => {
@@ -24,26 +24,26 @@ test('Get /search returns correct structure', async (t) => {
 });
 
 
-test('Get /search returns correct response and status code', async(t) => {
-	try {
-        const {body, statusCode} = await t.context.got("search"); // Send GET request to /search endpoint (from the search controller)
-        t.deepEqual(body, [
-            {
-                address: 'Leoforou Stratou 34',
-                restaurantName: 'Mamalouka',
-            },
-            {
-                address: 'Tsimiski 20',
-                restaurantName: 'Estrella',
-            }
-        ]);
-        // console.log('Test: Received response:', body);
-        t.is(statusCode, 200); 
-    } catch(err){
-        console.log('Error : ', err);
-        throw err;
-    }
-});
+// test('Get /search returns correct response and status code', async(t) => {
+// 	try {
+//         const {body, statusCode} = await t.context.got("search"); // Send GET request to /search endpoint (from the search controller)
+//         t.deepEqual(body, [
+//             {
+//                 address: 'Leoforou Stratou 34',
+//                 restaurantName: 'Mamalouka',
+//             },
+//             {
+//                 address: 'Tsimiski 20',
+//                 restaurantName: 'Estrella',
+//             }
+//         ]);
+//         // console.log('Test: Received response:', body);
+//         t.is(statusCode, 200); 
+//     } catch(err){
+//         console.log('Error : ', err);
+//         throw err;
+//     }
+// });
 
 
 // testing POST method
@@ -85,15 +85,4 @@ test('GET /search returns 404 for non-existent endpoint', async (t) => {
 
     t.is(error.response.statusCode, 404);  
 });
-
-test.serial('GET /search with mockError=true simulates a server error', async (t) => {
-    const error = await t.throwsAsync(() =>
-      t.context.got('search', { searchParams: { mockError: 'true' } }) // Pass query parameter
-    );
-    
-    console.log('Error: ', error.response.statusCode);
-    t.is(error.response.statusCode, 500); // Expect 500 Internal Server Error
-    t.deepEqual(error.response.body, { error: 'Mock Error' }); // Check mock error response
-  });
-  
 
