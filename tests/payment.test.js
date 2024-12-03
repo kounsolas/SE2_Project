@@ -1,14 +1,8 @@
 const test = require('ava');  //import the ava framework used for running tests
 const got = require('./init.test.js');   //import the custom got instance defined in "init.tests.js"
 
-
-
-// define a new test with the name POST /payBookingfee successful
-// SUCCESS CASE: The request should return a 200 status code and a JSON object with the key "success" set to true.
-test('POST /payBookingfee successful ', async (t) => 
-    // Simulate a successful request to the /payBookingfee endpoint
-    {    
-    const requestBody = { 
+test('POST /payBookingFee successful ', async (t) => {
+    const requestBody = {
         "cardHolderName": "John Doe",
         "cardNumber": "1234567891234568",
         "CVC":123,
@@ -29,7 +23,6 @@ test('POST /payBookingfee successful ', async (t) =>
         console.error('Error: ', err.response.body);
         t.fail('Request failed with error: ', +err.message);
     }
-
 
 });
 
@@ -99,9 +92,13 @@ test.serial('POST /payBookingFee fails when "cardNumber" is missing', async (t) 
     t.is(error.message, 'Response code 400 (Bad Request)');
 });
 
+
 test.serial('POST /payBookingFee fails when everything is missing', async (t) => {
     const requestBody = {
-
+        "cardHolderName": null,
+        "cardNumber": null,
+        "CVC": null,
+        "expirationDate":null
     };
 
     const error = await t.throwsAsync(() => t.context.got.post('payBookingFee', {
@@ -109,7 +106,7 @@ test.serial('POST /payBookingFee fails when everything is missing', async (t) =>
         responseType: 'json'
     }));
 
-    t.is(error.message, 'Response code 500 (Internal Server Error)');
+    t.is(error.message, 'Response code 400 (Bad Request)');
 });
 
 test('PUT /payBookingFee returns 405 method not allowed', async (t) => {
