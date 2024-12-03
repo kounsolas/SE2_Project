@@ -211,7 +211,78 @@ test('POST /preorder fails when required fields are missing', async (t) => {
     }
 });
 
+// Testing GET preorder by ID structure of the response and status code
+// test.serial('Get /preorder/:id successful', async (t) => {
+//     // Simulate adding a preorder to ensure it exists
+//     const requestBody = {
+//         "price": 9,
+//         "name": "meat",
+//         "id": "106",
+//         "restaurant_name": "Restaurant"
+//     };
 
+//     // Add the preorder (assuming the POST endpoint works correctly)
+//     await t.context.got.post("preorder", {
+//         json: requestBody,
+//         responseType: 'json'
+//     });
+
+//     try {
+//         // Simulate a request to get the preorder by ID
+//         const response = await t.context.got.get("preorder/106", {
+//             responseType: 'json'
+//         });
+
+//         console.log('Response Status:', response.statusCode);
+//         console.log('Response Body:', response.body);
+
+//         t.is(response.statusCode, 200); // Check if the status code is 200
+//         t.deepEqual(response.body, requestBody); // Assert the response body matches the expected result
+//     } catch (err) {
+//         console.error('Error: ', err.response.body);
+//         t.fail('Request failed with error: ' + err.message);
+//     }
+// });
+
+
+// Testing GET preorder by ID with restaurant_name as a query parameter
+test.serial('Get /preorder/:id successful', async (t) => {
+    const requestBody = {
+        "price": 9,
+        "name": "meat",
+        "id": "106",
+        "restaurant_name": "Restaurant"
+    };
+
+    // Add the preorder (assuming the POST endpoint works correctly)
+    // await t.context.got.post("preorder", {
+    //     json: requestBody,
+    //     responseType: 'json'
+    // });
+
+    try {
+        // Simulate a request to get the preorder by ID and restaurant name
+        console.log("I tested this !!!!!!!!!!!!!!!!!!!!!!!");
+        console.log('ID:!!!!!!!!!!!!!!!!!!!!', requestBody.id, 'RESTAURANT_NAME:!!!!!!!!!!!!!!!!!!!!!!!!', requestBody.restaurant_name);
+        const response = await t.context.got.get(`preorder/106`, {
+            searchParams: { restaurant_name: "Restaurant" }
+            //responseType: 'json'
+        });
+
+        console.log('Response Status:', response.statusCode);
+        console.log('Response Body:', response.body);
+
+        t.is(response.statusCode, 200); // Check if the status code is 200
+        t.deepEqual(response.body, requestBody); // Assert the response body matches the expected result
+    } catch (err) {
+        // Log the error response for more insights
+        if (err.response) {
+            console.error('Error Response Body: ', err.response.body);
+            console.error('Error Response Status: ', err.response.statusCode);
+        }
+        t.fail('Request failed with error: ' + err.message);
+    }
+});
 
 
 

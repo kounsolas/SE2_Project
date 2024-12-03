@@ -46,20 +46,18 @@ exports.preOrderIdDELETE = function(id) {
  * restaurant_name String 
  * returns PreOrder
  **/
-exports.preOrderIdGET = function(id,restaurant_name) {
+exports.preOrderIdGET = function(id, restaurant_name) {
+  console.log("i am into SSERVICE !!!!!!")
+  console.log('ID:!!!!!!!!!!!!!!!!!!!!', id, 'RESTAURANT_NAME:!!!!!!!!!!!!!!!!!!!!!!!!', restaurant_name);
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "price" : 7,
-  "name" : "salat",
-  "id" : "105",
-  "restaurant_name" : "Mamalouka"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+      // Find the preorder that matches both the ID and restaurant_name
+      const preorder = preOrders.find(order => order.id === id && order.restaurant_name === restaurant_name);
+
+      if (preorder) {
+          resolve(preorder); // Return the found preorder
+      } else {
+          reject(new Error('Preorder not found')); // Reject if no matching preorder
+      }
   });
 }
 

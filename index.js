@@ -9,7 +9,7 @@ const serverPort = 8080;
 // swaggerRouter configuration
 const options = {
     logging:true,
-    mock: true,
+    mock: true,  
     routing: {
         controllers: path.join(__dirname, './controllers')
     }

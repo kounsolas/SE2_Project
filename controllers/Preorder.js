@@ -23,7 +23,8 @@ module.exports.preOrderIdDELETE = function preOrderIdDELETE (req, res, next, id)
     });
 };
 
-module.exports.preOrderIdGET = function preOrderIdGET (req, res, next, id, restaurant_name) {
+module.exports.preOrderIdGET = function preOrderIdGET (req, res, next, restaurant_name, id) {
+  
   Preorder.preOrderIdGET(id, restaurant_name)
     .then(function (response) {
       utils.writeJson(res, response);
