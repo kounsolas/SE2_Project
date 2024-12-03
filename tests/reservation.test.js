@@ -69,10 +69,6 @@ test('POST /reservations creates a new reservation', async (t) => {
 
 
 
-
-
-
-
 // GET /reservations/{id} - Επιστρέφει συγκεκριμένη κράτηση
 test('GET /reservations/{id} returns a specific reservation', async (t) => {
     const client = got(t);
@@ -133,3 +129,33 @@ test('DELETE /reservations/{id} cancels a reservation', async (t) => {
         throw err;
     }
 });
+
+
+// POST /reservations - Αποτυχία δημιουργίας κράτησης λόγω μη έγκυρων δεδομένων
+test('POST /reservations fails with invalid data', async (t) => {
+    const client = t.context.got;
+    const invalidReservation = {
+        date: 'invalid-date',
+        allergies: 123,
+    };
+
+    const restaurantName = 'Mamalouka';
+
+    try {
+        await client.post('reservations', {
+            searchParams: { RestaurantName: restaurantName },
+            json: invalidReservation,
+            responseType: 'json',
+        });
+        t.fail('POST should have failed with invalid data');
+    } catch (err) {
+        t.is(err.response?.statusCode, 400, 'Expected status 400 for invalid data');
+        // Απλά έλεγχος για την ύπαρξη οποιουδήποτε σώματος στην απόκριση
+        t.truthy(err.response?.body, 'Expected some response body');
+    }
+});
+
+
+
+
+
