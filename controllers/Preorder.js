@@ -34,14 +34,20 @@ module.exports.preOrderIdGET = function preOrderIdGET (req, res, next, restauran
     });
 };
 
-module.exports.preOrderIdPUT = function preOrderIdPUT (req, res, next, body, restaurant_name, id) {
-  Preorder.preOrderIdPUT(body, restaurant_name, id)
-    .then(function (response) {
-      utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
-    });
+module.exports.preOrderIdPUT = function preOrderIdPUT(req, res, next, body, restaurant_name, id) {
+  // console.log('req.params:', req.params); // Log the params for debugging
+  // console.log('req.query:', req.query);   // Log the query for debugging
+  // console.log('req.body:', req.body);     // Log the body for debugging
+  console.log('restaurant_name:', restaurant_name); // Log the restaurant_name for debugging
+  console.log('id:', id); // Log the id for debugging
+
+  Preorder.preOrderIdPUT(req.body,restaurant_name,id)
+      .then(function (response) {
+          utils.writeJson(res, response);
+      })
+      .catch(function (response) {
+          utils.writeJson(res, response, response.status || 500);
+      });
 };
 
 

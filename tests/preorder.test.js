@@ -262,8 +262,8 @@ test.serial('Get /preorder/:id successful', async (t) => {
 
     try {
         // Simulate a request to get the preorder by ID and restaurant name
-        console.log("I tested this !!!!!!!!!!!!!!!!!!!!!!!");
-        console.log('ID:!!!!!!!!!!!!!!!!!!!!', requestBody.id, 'RESTAURANT_NAME:!!!!!!!!!!!!!!!!!!!!!!!!', requestBody.restaurant_name);
+        //console.log("I tested this !!!!!!!!!!!!!!!!!!!!!!!");
+        //console.log('ID:!!!!!!!!!!!!!!!!!!!!', requestBody.id, 'RESTAURANT_NAME:!!!!!!!!!!!!!!!!!!!!!!!!', requestBody.restaurant_name);
         const response = await t.context.got.get(`preorder/106`, {
             searchParams: { restaurant_name: "Restaurant" }
             //responseType: 'json'
@@ -272,10 +272,43 @@ test.serial('Get /preorder/:id successful', async (t) => {
         console.log('Response Status:', response.statusCode);
         console.log('Response Body:', response.body);
 
+
         t.is(response.statusCode, 200); // Check if the status code is 200
         t.deepEqual(response.body, requestBody); // Assert the response body matches the expected result
     } catch (err) {
         // Log the error response for more insights
+        if (err.response) {
+            console.error('Error Response Body: ', err.response.body);
+            console.error('Error Response Status: ', err.response.statusCode);
+        }
+        t.fail('Request failed with error: ' + err.message);
+    }
+});
+
+test.serial('Put /preorder/:id successful', async (t) => {
+    const updatedBody = {
+        price: 12,
+        name: "grilled chicken",
+        id: "106",
+        restaurant_name: "Restaurant"
+    };
+
+    console.log("I tested this !!!!!!!!!!!!!!!!!!!!!!!");
+    console.log('ID:!!!!!!!!!!!!!!!!!!!!', updatedBody.id, 'RESTAURANT_NAME:!!!!!!!!!!!!!!!!!!!!!!!!', updatedBody.restaurant_name);
+
+    try {
+        const response = await t.context.got.put(`preorder/106`, {
+            json: updatedBody,
+            searchParams: { restaurant_name: "Restaurant" }, // Include restaurant_name in the query
+            responseType: 'json'
+        });
+
+        console.log('Response Status:', response.statusCode);
+        console.log('Response Body:', response.body);
+
+        t.is(response.statusCode, 200); // Expect a 200 status code
+        t.deepEqual(response.body, { ...updatedBody, id: "106", restaurant_name: "Restaurant" }); // Check updated values
+    } catch (err) {
         if (err.response) {
             console.error('Error Response Body: ', err.response.body);
             console.error('Error Response Status: ', err.response.statusCode);

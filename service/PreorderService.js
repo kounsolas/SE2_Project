@@ -47,8 +47,8 @@ exports.preOrderIdDELETE = function(id) {
  * returns PreOrder
  **/
 exports.preOrderIdGET = function(id, restaurant_name) {
-  console.log("i am into SSERVICE !!!!!!")
-  console.log('ID:!!!!!!!!!!!!!!!!!!!!', id, 'RESTAURANT_NAME:!!!!!!!!!!!!!!!!!!!!!!!!', restaurant_name);
+ // console.log("i am into SSERVICE !!!!!!")
+  //console.log('ID:!!!!!!!!!!!!!!!!!!!!', id, 'RESTAURANT_NAME:!!!!!!!!!!!!!!!!!!!!!!!!', restaurant_name);
   return new Promise(function(resolve, reject) {
       // Find the preorder that matches both the ID and restaurant_name
       const preorder = preOrders.find(order => order.id === id && order.restaurant_name === restaurant_name);
@@ -70,22 +70,28 @@ exports.preOrderIdGET = function(id, restaurant_name) {
  * id String 
  * returns PreOrder
  **/
-exports.preOrderIdPUT = function(body,restaurant_name,id) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "price" : 7,
-  "name" : "salat",
-  "id" : "105",
-  "restaurant_name" : "Mamalouka"
+
+exports.preOrderIdPUT = function (body, restaurant_name, id) {
+    return new Promise(function (resolve, reject) {
+        // Find the preorder by id and restaurant_name
+        const index = preOrders.findIndex(order => order.id === id && order.restaurant_name === restaurant_name);
+
+        if (index === -1) {
+            reject({
+                status: 404,
+                message: `Preorder with ID ${id} and restaurant_name ${restaurant_name} not found`
+            });
+            return;
+        }
+
+        // Update the preorder
+        preOrders[index] = { ...preOrders[index], ...body };
+
+        // Return the updated preorder
+        resolve(preOrders[index]);
+    });
 };
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
-}
+
 
 
 /**
