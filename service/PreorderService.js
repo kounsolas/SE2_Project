@@ -32,11 +32,24 @@ exports.preOrderGET = function() {
  * id String 
  * no response value expected for this operation
  **/
-exports.preOrderIdDELETE = function(id) {
-  return new Promise(function(resolve, reject) {
-    resolve();
+exports.preOrderIdDELETE = function (id) {
+  return new Promise(function (resolve, reject) {
+    const index = preOrders.findIndex(order => order.id === id);
+
+    if (index === -1) {
+      reject({
+        status: 404,
+        message: `Preorder with ID ${id} not found`
+      });
+      return;
+    }
+
+    // Remove the preorder
+    preOrders.splice(index, 1);
+
+    resolve(); // Indicate successful deletion
   });
-}
+};
 
 
 /**

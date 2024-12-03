@@ -261,11 +261,46 @@ test.serial('Put /preorder/:id successful', async (t) => {
             responseType: 'json'
         });
 
-        console.log('Response Status:', response.statusCode);
-        console.log('Response Body:', response.body);
+        //console.log('Response Status:', response.statusCode);
+        //console.log('Response Body:', response.body);
 
         t.is(response.statusCode, 200); // Expect a 200 status code
         t.deepEqual(response.body, { ...updatedBody, id: "106", restaurant_name: "Restaurant" }); // Check updated values
+    } catch (err) {
+        if (err.response) {
+            console.error('Error Response Body: ', err.response.body);
+            console.error('Error Response Status: ', err.response.statusCode);
+        }
+        t.fail('Request failed with error: ' + err.message);
+    }
+});
+
+
+test.serial('Delete /preorder/:id successful', async (t) => {
+    // // Add a preorder to delete
+    // const requestBody = {
+    //     price: 15,
+    //     name: "pasta",
+    //     id: "107",
+    //     restaurant_name: "Restaurant"
+    // };
+
+    // // Add the preorder (assuming the POST endpoint works correctly)
+    // await t.context.got.post("preorder", {
+    //     json: requestBody,
+    //     responseType: 'json'
+    // });
+
+    try {
+        // Delete the preorder
+        const response = await t.context.got.delete(`preorder/106`, {
+            responseType: 'json'
+        });
+
+        console.log('Response Status:', response.statusCode);
+
+        // Check the status code
+        t.is(response.statusCode, 204); // Ensure 204 No Content
     } catch (err) {
         if (err.response) {
             console.error('Error Response Body: ', err.response.body);

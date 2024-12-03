@@ -13,13 +13,13 @@ module.exports.preOrderGET = function preOrderGET (req, res, next) {
     });
 };
 
-module.exports.preOrderIdDELETE = function preOrderIdDELETE (req, res, next, id) {
+module.exports.preOrderIdDELETE = function preOrderIdDELETE(req, res, next, id) {
   Preorder.preOrderIdDELETE(id)
-    .then(function (response) {
-      utils.writeJson(res, response);
+    .then(function () {
+      res.status(204).end(); // Return 204 No Content on success
     })
     .catch(function (response) {
-      utils.writeJson(res, response);
+      utils.writeJson(res, response, response.status || 500);
     });
 };
 
