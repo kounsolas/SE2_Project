@@ -161,3 +161,62 @@ test('GET /ratings/{id} fails when rating not found', async (t) => {
 
 // More tests can be added here to cover other scenarios
 
+// Negative Test Case: POST /ratings fails when required fields are missing
+test('POST /ratings fails with 400 when required fields are missing', async (t) => {
+  const requestBody = {
+    user_id: 'user32'
+    // Missing the "rating" field
+  };
+
+  const error = await t.throwsAsync(() =>
+    t.context.got.post('ratings?restaurant_name=Mamalouka', {
+      json: requestBody,
+      responseType: 'json'
+    })
+  );
+
+  t.is(error.response.statusCode, 400); // Assert the status code is 400 (Bad Request)
+});
+
+// Negative Test Case: GET /ratings fails when restaurant_name is missing
+test('GET /ratings fails with 400 when restaurant_name is missing', async (t) => {
+  const error = await t.throwsAsync(() =>
+    t.context.got.get('ratings', {
+      responseType: 'json'
+    })
+  );
+
+  t.is(error.response.statusCode, 400); // Assert the status code is 400 (Bad Request)
+});
+
+// Negative Test Case: GET /ratings/{id} fails when rating ID does not exist
+test('GET /ratings/{id} fails with 404 for a nonexistent ID', async (t) => {
+  const ratingId = 'nonexistentId';
+  const restaurantName = 'mamalouka';
+
+  const error = await t.throwsAsync(() =>
+    t.context.got.get(`ratings/${ratingId}?restaurant_name=${restaurantName}`, {
+      responseType: 'json'
+    })
+  );
+
+  t.is(error.response.statusCode, 404); // Assert the status code is 404 (Not Found)
+});
+
+test('GET /ratings validates the structure of the response', async (t) => {
+  const restaurantName = "mamalouka";
+
+  const response = await t.context.got.get(`ratings?restaurant_name=${restaurantName}`, {
+    responseType: 'json'
+  });
+
+  t.is(response.statusCode, 200); // Expect 200 OK
+  t.true(Array.isArray(response.body)); // Check response is an array
+
+  response.body.forEach((rating) => {
+    t.truthy(rating.user_id); // Check user_id exists
+    t.truthy(rating.rating); // Check rating exists
+    t.truthy(rating.restaurant_name); // Check restaurant_name exists
+    t.is(rating.restaurant_name, restaurantName); // Check restaurant_name matches
+  });
+});
