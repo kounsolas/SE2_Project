@@ -1,3 +1,4 @@
+// Description: Test cases for the ratings API endpoints
 const test = require('ava');  //import the ava framework used for running tests
 const got = require('./init.test.js');   //import the custom got instance defined in "init.tests.js"
 
@@ -157,3 +158,6 @@ test('GET /ratings/{id} fails when rating not found', async (t) => {
 
   t.is(error.message, 'Response code 404 (Not Found)');
 });
+
+// More tests can be added here to cover other scenarios
+
