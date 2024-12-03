@@ -150,3 +150,52 @@ test('GET /reviews fails with an invalid query parameter', async (t) => {
     t.fail(err.message);
   }
 });
+
+// SUCCESS CASE: Validate the response time of the endpoint is within acceptable limits
+test('GET /reviews responds within acceptable time', async (t) => {
+  const start = Date.now();
+  const response = await t.context.got.get('reviews', {
+    responseType: 'json',
+  });
+  const duration = Date.now() - start;
+
+  t.is(response.statusCode, 200);
+  t.true(duration < 500, `Response time exceeded: ${duration}ms`); // Expect response time to be under 500ms
+});
+
+// FAILURE CASE: Check if server handles missing parameters gracefully
+test('GET /reviews responds correctly when all parameters are missing', async (t) => {
+  const response = await t.context.got.get('reviews', {
+    responseType: 'json',
+  });
+
+  t.is(response.statusCode, 200);
+  t.true(Array.isArray(response.body));
+});
+
+// FAILURE CASE: Ensure server responds correctly to unsupported HTTP methods
+test('POST /reviews is not allowed', async (t) => {
+  const error = await t.throwsAsync(() =>
+    t.context.got.post('reviews', {
+      json: { invalidField: 'test' },
+      responseType: 'json',
+    })
+  );
+
+  t.is(error.response.statusCode, 405); // Expect 405 Method Not Allowed
+});
+
+// SUCCESS CASE: Ensure the server supports a high number of concurrent requests
+test('GET /reviews supports multiple concurrent requests', async (t) => {
+  const requests = Array.from({ length: 10 }).map(() =>
+    t.context.got.get('reviews', {
+      responseType: 'json',
+    })
+  );
+
+  const responses = await Promise.all(requests);
+  responses.forEach((response) => {
+    t.is(response.statusCode, 200);
+    t.true(Array.isArray(response.body));
+  });
+});
