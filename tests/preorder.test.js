@@ -69,6 +69,38 @@ test.serial('Post /preorder successful', async(t) => {
     }
 });
 
+
+// Testing POST /preorder fails when trying to create a duplicate preorder
+// test.serial('POST /preorder fails when trying to create a duplicate preorder', async (t) => {
+//     const duplicateRequestBody = {
+//         price: 9,
+//         name: "meat",
+//         id: "106", // Same ID as an existing preorder
+//         restaurant_name: "Restaurant" // Same restaurant_name as an existing preorder
+//     };
+
+//     // First, create the initial preorder
+//     await t.context.got.post("preorder", {
+//         json: duplicateRequestBody,
+//         responseType: 'json'
+//     });
+
+//     // Attempt to create the duplicate preorder
+//     try {
+//         await t.context.got.post("preorder", {
+//             json: duplicateRequestBody,
+//             responseType: 'json'
+//         });
+//         t.fail('Request should have failed due to duplicate preorder.'); // This line should not be reached
+//     } catch (err) {
+//         t.is(err.response.statusCode, 400); // Expect a 400 Bad Request
+//         t.is(err.response.body.message, 'Duplicate preorder with the same id and restaurant_name'); // Validate the error message
+//     }
+// });
+
+
+
+
 //define a new test with the name /preorder fails when required fields are missing
 //FAILURE CASE: The request should return a 400 status code.
 test('POST /preorder fails when required fields are missing', async (t) => {
@@ -277,19 +309,6 @@ test.serial('Put /preorder/:id successful', async (t) => {
 
 
 test.serial('Delete /preorder/:id successful', async (t) => {
-    // // Add a preorder to delete
-    // const requestBody = {
-    //     price: 15,
-    //     name: "pasta",
-    //     id: "107",
-    //     restaurant_name: "Restaurant"
-    // };
-
-    // // Add the preorder (assuming the POST endpoint works correctly)
-    // await t.context.got.post("preorder", {
-    //     json: requestBody,
-    //     responseType: 'json'
-    // });
 
     try {
         // Delete the preorder
@@ -310,9 +329,27 @@ test.serial('Delete /preorder/:id successful', async (t) => {
     }
 });
 
+// Testing GET /preorder/:id fails with invalid ID
+test.serial('GET /preorder/:id fails with invalid ID', async (t) => {
+    try {
+        // Step 1: Fetch existing preOrders
+        const { body: preOrders } = await t.context.got('preorder', { responseType: 'json' });
 
+        // Step 2: Generate a non-existing ID
+        const existingIDs = preOrders.map(preOrder => preOrder.id);
+        const invalidID = existingIDs.length ? Math.max(...existingIDs.map(Number)) + 1 : 9999;
 
+        // Step 3: Attempt to fetch a non-existent preorder
+        const error = await t.throwsAsync(() =>
+            t.context.got.get(`preorder/${invalidID}`, {
+                searchParams: { restaurant_name: 'Restaurant' },
+            })
+        );
 
-
-
-
+        // Step 4: Validate the response
+        t.is(error.response.statusCode, 404);
+        t.is(error.response.body.message, 'Preorder not found');
+    } catch (err) {
+        t.fail('Unexpected error: ' + err.message);
+    }
+});

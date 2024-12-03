@@ -57,20 +57,23 @@ exports.preOrderIdDELETE = function (id) {
  * restaurant_name String 
  * returns PreOrder
  **/
-exports.preOrderIdGET = function(id, restaurant_name) {
- // console.log("i am into SSERVICE !!!!!!")
-  //console.log('ID:!!!!!!!!!!!!!!!!!!!!', id, 'RESTAURANT_NAME:!!!!!!!!!!!!!!!!!!!!!!!!', restaurant_name);
-  return new Promise(function(resolve, reject) {
+exports.preOrderIdGET = function (id, restaurant_name) {
+  return new Promise(function (resolve, reject) {
       // Find the preorder that matches both the ID and restaurant_name
-      const preorder = preOrders.find(order => order.id === id && order.restaurant_name === restaurant_name);
+      const preorder = preOrders.find(
+          (order) => order.id === id && order.restaurant_name === restaurant_name
+      );
 
       if (preorder) {
-          resolve(preorder); // Return the found preorder
+          resolve(preorder); // Resolve with the found preorder
       } else {
-          reject(new Error('Preorder not found')); // Reject if no matching preorder
+          reject(new Error('Preorder not found')); // Reject with an appropriate error message
       }
   });
-}
+};
+
+
+
 /**
  * Update a menu item
  *
@@ -121,4 +124,5 @@ exports.preOrderPOST = function (body) {
     resolve(newPreOrder); // Return the created preorder
   });
 };
+
 
