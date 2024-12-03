@@ -14,6 +14,8 @@ let preOrders = [
  **/
 exports.preOrderGET = function() {
   return new Promise(function(resolve, reject) {
+
+
     // Check if there are any preorders
     if (preOrders.length > 0) {
       // Resolve with the current list of preorders
@@ -24,8 +26,6 @@ exports.preOrderGET = function() {
     }
   });
 };
-
-
 /**
  * Delete a menu item
  *
@@ -49,9 +49,7 @@ exports.preOrderIdDELETE = function (id) {
 
     resolve(); // Indicate successful deletion
   });
-};
-
-
+}
 /**
  * Retrieve a specific menu item
  *
@@ -73,8 +71,6 @@ exports.preOrderIdGET = function(id, restaurant_name) {
       }
   });
 }
-
-
 /**
  * Update a menu item
  *
@@ -104,8 +100,6 @@ exports.preOrderIdPUT = function (body, restaurant_name, id) {
         resolve(preOrders[index]);
     });
 };
-
-
 
 /**
  * Create a new menu item
