@@ -6,6 +6,8 @@ test('GET /directions should return direction details for a given restaurant nam
   const restaurantName = 'Test Restaurant'; // Το όνομα του εστιατορίου που θέλουμε να ελέγξουμε
   const encodedRestaurantName = encodeURIComponent(restaurantName); // Κωδικοποιούμε την παράμετρο
 
+  console.log('Encoded Restaurant Name:', encodedRestaurantName); // Logging κωδικοποιημένο όνομα
+
   try {
     const response = await t.context.got.get('directions', {
       searchParams: { restaurantName: encodedRestaurantName }, // Χρησιμοποιούμε το κωδικοποιημένο όνομα
@@ -44,3 +46,26 @@ test('GET /directions should return error if restaurantName is missing', async (
     t.fail('Unexpected error: ' + (err.response ? err.response.body : err.message));
   }
 });
+
+
+
+
+
+// Define a test for empty restaurant name
+test('GET /directions should return error if restaurantName is empty', async (t) => {
+  try {
+    const error = await t.throwsAsync(() =>
+      t.context.got.get('directions', {
+        searchParams: { restaurantName: '' }, // Empty restaurant name
+        responseType: 'json',
+      })
+    );
+
+    console.log('Error:', error.response.body);
+    t.is(error.response.statusCode, 400); // Ελέγχουμε αν επιστρέφεται κωδικός 400 για κενό όνομα
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    t.fail('Unexpected error: ' + (err.response ? err.response.body : err.message));
+  }
+});
+
