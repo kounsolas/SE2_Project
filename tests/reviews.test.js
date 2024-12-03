@@ -84,3 +84,69 @@ test('GET /reviews returns all reviews when restaurantName is not provided', asy
     t.fail('Request failed with error: ' + err.message);
   }
 });
+// SUCCESS CASE: Check if ratings are within the expected range (1-5)
+test('GET /reviews checks if all ratings are within 1 to 5', async (t) => {
+  try {
+    const response = await t.context.got.get('reviews', {
+      responseType: 'json',
+    });
+
+    t.is(response.statusCode, 200);
+    response.body.forEach((review) => {
+      t.true(review.rating >= 1 && review.rating <= 5, `Rating ${review.rating} should be between 1 and 5`);
+    });
+  } catch (err) {
+    t.fail(err.message);
+  }
+});
+
+// FAILURE CASE: Ensure response is an empty array if there are no reviews at all
+test('GET /reviews returns empty array if no reviews exist', async (t) => {
+  try {
+    const response = await t.context.got.get('reviews', {
+      searchParams: { restaurantName: 'non-existent-data' },
+      responseType: 'json',
+    });
+
+    t.is(response.statusCode, 200);
+    t.deepEqual(response.body, [], 'Response should be an empty array if there are no reviews');
+  } catch (err) {
+    t.fail(err.message);
+  }
+});
+
+// SUCCESS CASE: Ensure the response for reviews includes specific fields
+test('GET /reviews ensures reviews include specific fields', async (t) => {
+  try {
+    const response = await t.context.got.get('reviews', {
+      responseType: 'json',
+    });
+
+    t.is(response.statusCode, 200);
+    response.body.forEach((review) => {
+      t.truthy(review.id, 'Each review should have an "id" field');
+      t.truthy(review.user_id, 'Each review should have a "user_id" field');
+      t.truthy(review.restaurant_id, 'Each review should have a "restaurant_id" field');
+      t.true(typeof review.rating === 'number', 'Each review should have a numeric "rating" field');
+      t.truthy(review.comment, 'Each review should have a "comment" field');
+    });
+  } catch (err) {
+    t.fail(err.message);
+  }
+});
+
+// FAILURE CASE: The request should fail if an invalid query parameter is passed
+test('GET /reviews fails with an invalid query parameter', async (t) => {
+  try {
+    const error = await t.throwsAsync(() =>
+      t.context.got.get('reviews', {
+        searchParams: { invalidParam: 'invalidValue' },
+        responseType: 'json',
+      })
+    );
+
+    t.is(error.response.statusCode, 400); // Assuming the server rejects invalid parameters with a 400 error
+  } catch (err) {
+    t.fail(err.message);
+  }
+});
