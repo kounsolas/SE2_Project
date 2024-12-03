@@ -57,4 +57,3 @@ module.exports.ratingsPOST = function ratingsPOST(req, res, next, body) {
       utils.writeJson(res, { message: err.message }, err.statusCode || 500);
     });
 };
-

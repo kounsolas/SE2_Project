@@ -117,3 +117,48 @@ exports.ratingsPOST = function(body, restaurant_name) {
     resolve(newRating);
   });
 };
+
+/**
+ * Create a new rating
+ *
+ * body Ratings Ratings object that needs to be added
+ * restaurant_name String 
+ * returns Ratings
+ **/
+exports.ratingsPOST = function (body, restaurant_name) {
+  return new Promise(function (resolve, reject) {
+    console.log('Received Body in Service:', body);
+    console.log('Received Restaurant Name:', restaurant_name);
+
+    // Validate required fields in the body
+    const requiredFields = ['user_id', 'rating'];
+    for (const field of requiredFields) {
+      if (!body[field]) {
+        console.error(`Missing required field: ${field}`);
+        return reject({
+          statusCode: 400,
+          message: `Missing required field: ${field}`,
+        });
+      }
+    }
+
+    // Validate rating range
+    if (body.rating < 1 || body.rating > 5) {
+      console.error('Invalid rating value');
+      return reject({
+        statusCode: 400,
+        message: 'Rating must be between 1 and 5',
+      });
+    }
+
+    // Create the response object
+    const response = {
+      user_id: body.user_id,
+      rating: body.rating,
+      restaurant_name: restaurant_name || 'mamalouka', // Default to mamalouka
+    };
+
+    console.log('Response:', response);
+    resolve(response);
+  });
+};
