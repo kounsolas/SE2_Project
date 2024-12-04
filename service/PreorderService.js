@@ -20,7 +20,6 @@ exports.preOrderGET = function() {
     if (preOrders.length > 0) {
       // Resolve with the current list of preorders
       resolve(preOrders);
-
     } else {
       // Resolve with an empty array if no preorders exist
       resolve([]);
@@ -33,9 +32,22 @@ exports.preOrderGET = function() {
  * id String 
  * no response value expected for this operation
  **/
-exports.preOrderIdDELETE = function(id) {
-  return new Promise(function(resolve, reject) {
-    resolve();
+exports.preOrderIdDELETE = function (id) {
+  return new Promise(function (resolve, reject) {
+    const index = preOrders.findIndex(order => order.id === id);
+
+    if (index === -1) {
+      reject({
+        status: 404,
+        message: `Preorder with ID ${id} not found`
+      });
+      return;
+    }
+
+    // Remove the preorder
+    preOrders.splice(index, 1);
+
+    resolve(); // Indicate successful deletion
   });
 }
 /**
@@ -45,22 +57,23 @@ exports.preOrderIdDELETE = function(id) {
  * restaurant_name String 
  * returns PreOrder
  **/
-exports.preOrderIdGET = function(id,restaurant_name) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "price" : 7,
-  "name" : "salat",
-  "id" : "105",
-  "restaurant_name" : "Mamalouka"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+exports.preOrderIdGET = function (id, restaurant_name) {
+  return new Promise(function (resolve, reject) {
+      // Find the preorder that matches both the ID and restaurant_name
+      const preorder = preOrders.find(
+          (order) => order.id === id && order.restaurant_name === restaurant_name
+      );
+
+      if (preorder) {
+          resolve(preorder); // Resolve with the found preorder
+      } else {
+          reject(new Error('Preorder not found')); // Reject with an appropriate error message
+      }
   });
-}
+};
+
+
+
 /**
  * Update a menu item
  *
@@ -69,22 +82,28 @@ exports.preOrderIdGET = function(id,restaurant_name) {
  * id String 
  * returns PreOrder
  **/
-exports.preOrderIdPUT = function(body,restaurant_name,id) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "price" : 7,
-  "name" : "salat",
-  "id" : "105",
-  "restaurant_name" : "Mamalouka"
+
+exports.preOrderIdPUT = function (body, restaurant_name, id) {
+    return new Promise(function (resolve, reject) {
+        // Find the preorder by id and restaurant_name
+        const index = preOrders.findIndex(order => order.id === id && order.restaurant_name === restaurant_name);
+
+        if (index === -1) {
+            reject({
+                status: 404,
+                message: `Preorder with ID ${id} and restaurant_name ${restaurant_name} not found`
+            });
+            return;
+        }
+
+        // Update the preorder
+        preOrders[index] = { ...preOrders[index], ...body };
+
+        // Return the updated preorder
+        resolve(preOrders[index]);
+    });
 };
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
-}
+
 /**
  * Create a new menu item
  *
@@ -105,4 +124,3 @@ exports.preOrderPOST = function (body) {
     resolve(newPreOrder); // Return the created preorder
   });
 };
-
