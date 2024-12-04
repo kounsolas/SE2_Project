@@ -69,152 +69,34 @@ test.serial('Post /preorder successful', async(t) => {
     }
 });
 
+
+// Testing POST /preorder fails when trying to create a duplicate preorder
+test.serial('POST /preorder fails when trying to create a duplicate preorder', async (t) => {
+    const duplicateRequestBody = {
+        price: 7,
+        name: "salat",
+        id: "105", // Same ID as an existing preorder
+        restaurant_name: "Mamalouka" // Same restaurant_name as an existing preorder
+    };
+
+    // Attempt to create the duplicate preorder
+    try {
+        await t.context.got.post("preorder", {
+            json: duplicateRequestBody,
+            responseType: 'json'
+        });
+        t.fail('Request should have failed due to duplicate preorder.'); // This line should not be reached
+    } catch (err) {
+        t.is(err.response.statusCode, 400); // Expect a 400 Bad Request
+        t.is(err.response.body.message, 'Duplicate preorder with ID '+duplicateRequestBody.id +' and restaurant_name ' +duplicateRequestBody.restaurant_name); // Validate the error message
+    }
+});
+
+
+
+
 //define a new test with the name /preorder fails when required fields are missing
 //FAILURE CASE: The request should return a 400 status code.
-// test('POST /preorder fails when required fields are missing', async (t) => {
-//     const testCases = [
-//         {
-//             description: 'missing "price"',
-//             requestBody: {
-//                 name: "meat",
-//                 id: "106",
-//                 restaurant_name: "Restaurant"
-//             }
-//         },
-//         {
-//             description: 'missing "name"',
-//             requestBody: {
-//                 price: 9,
-//                 id: "106",
-//                 restaurant_name: "Restaurant"
-//             }
-//         },
-//         {
-//             description: 'missing "id"',
-//             requestBody: {
-//                 price: 9,
-//                 name: "meat",
-//                 restaurant_name: "Restaurant"
-//             }
-//         },
-//         {
-//             description: 'missing "restaurant_name"',
-//             requestBody: {
-//                 price: 9,
-//                 name: "meat",
-//                 id: "106"
-//             }
-//         },
-//         {
-//             description: 'missing "price" and "name"',
-//             requestBody: {
-//                 id: "106",
-//                 restaurant_name: "Restaurant"
-//             }
-//         },
-//         {
-//             description: 'missing "price" and "id"',
-//             requestBody: {
-//                 name: "meat",
-//                 restaurant_name: "Restaurant"
-//             }
-//         },
-//         {
-//             description: 'missing "price" and "restaurant_name"',
-//             requestBody: {
-//                 name: "meat",
-//                 id: "106"
-//             }
-//         },
-//         {
-//             description: 'missing "name" and "id"',
-//             requestBody: {
-//                 price: 9,
-//                 restaurant_name: "Restaurant"
-//             }
-//         },
-//         {
-//             description: 'missing "name" and "restaurant_name"',
-//             requestBody: {
-//                 price: 9,
-//                 id: "106"
-//             }
-//         },
-//         {
-//             description: 'missing "id" and "restaurant_name"',
-//             requestBody: {
-//                 price: 9,
-//                 name: "meat"
-//             }
-//         },
-//         {
-//             description: 'missing "price", "name", and "id"',
-//             requestBody: {
-//                 restaurant_name: "Restaurant"
-//             }
-//         },
-//         {
-//             description: 'missing "price", "name", and "restaurant_name"',
-//             requestBody: {
-//                 id: "106"
-//             }
-//         },
-//         {
-//             description: 'missing "price", "id", and "restaurant_name"',
-//             requestBody: {
-//                 name: "meat"
-//             }
-//         },
-//         {
-//             description: 'missing "name", "id", and "restaurant_name"',
-//             requestBody: {
-//                 price: 9
-//             }
-//         },
-//         {
-//             description: 'missing all fields',
-//             requestBody: {}
-//         }
-//     ];
-
-//     for (const testCase of testCases) {
-//         const { description, requestBody } = testCase;
-
-//         try {
-//             await t.throwsAsync(() =>
-//                 t.context.got.post('preorder', {
-//                     json: requestBody,
-//                     responseType: 'json'
-//                 })
-//             );
-//         } catch (err) {
-//             console.error(`Test Case Failed: ${description}`);
-//             console.error('Response:', err.response?.body || 'No response body');
-//             t.fail(`Unexpected behavior for ${description}`);
-//         }
-//     }
-// });
-
-// test('POST /preorder fails when required fields are missing', async (t) => {
-//     const incompleteRequestBody = {
-//       name: "meat", // Missing price, id, and restaurant_name
-//     };
-  
-//     const error = await t.throwsAsync(() =>
-//       t.context.got.post("preorder", {
-//         json: incompleteRequestBody,
-//         responseType: "json",
-//       })
-//     );
-  
-//     t.is(error.response.statusCode, 400);
-//     t.is(
-//       error.response.body.message,
-//       "Missing required field(s): price id restaurant_name"
-//     );
-//   });
-  
-
 test('POST /preorder fails when required fields are missing', async (t) => {
     const testCases = [
         {
@@ -357,9 +239,105 @@ test('POST /preorder fails when required fields are missing', async (t) => {
 
 
 
+// Testing GET preorder by ID with restaurant_name as a query parameter
+test.serial('Get /preorder/:id successful', async (t) => {
+    const requestBody = {
+        "price": 9,
+        "name": "meat",
+        "id": "106",
+        "restaurant_name": "Restaurant"
+    };
+
+    try {
+        const response = await t.context.got.get(`preorder/106`, {
+            searchParams: { restaurant_name: "Restaurant" }
+        });
+
+        console.log('Response Status:', response.statusCode);
+        console.log('Response Body:', response.body);
 
 
+        t.is(response.statusCode, 200); // Check if the status code is 200
+        t.deepEqual(response.body, requestBody); // Assert the response body matches the expected result
+    } catch (err) {
+        // Log the error response for more insights
+        if (err.response) {
+            console.error('Error Response Body: ', err.response.body);
+            console.error('Error Response Status: ', err.response.statusCode);
+        }
+        t.fail('Request failed with error: ' + err.message);
+    }
+});
+
+test.serial('Put /preorder/:id successful', async (t) => {
+    const updatedBody = {
+        price: 12,
+        name: "grilled chicken",
+        id: "106",
+        restaurant_name: "Restaurant"
+    };
+
+    try {
+        const response = await t.context.got.put(`preorder/106`, {
+            json: updatedBody,
+            searchParams: { restaurant_name: "Restaurant" }, // Include restaurant_name in the query
+            responseType: 'json'
+        });
+
+        t.is(response.statusCode, 200); // Expect a 200 status code
+        t.deepEqual(response.body, { ...updatedBody, id: "106", restaurant_name: "Restaurant" }); // Check updated values
+    } catch (err) {
+        if (err.response) {
+            console.error('Error Response Body: ', err.response.body);
+            console.error('Error Response Status: ', err.response.statusCode);
+        }
+        t.fail('Request failed with error: ' + err.message);
+    }
+});
 
 
+test.serial('Delete /preorder/:id successful', async (t) => {
 
+    try {
+        // Delete the preorder
+        const response = await t.context.got.delete(`preorder/106`, {
+            responseType: 'json'
+        });
 
+        console.log('Response Status:', response.statusCode);
+
+        // Check the status code
+        t.is(response.statusCode, 204); // Ensure 204 No Content
+    } catch (err) {
+        if (err.response) {
+            console.error('Error Response Body: ', err.response.body);
+            console.error('Error Response Status: ', err.response.statusCode);
+        }
+        t.fail('Request failed with error: ' + err.message);
+    }
+});
+
+// Testing GET /preorder/:id fails with invalid ID
+test.serial('GET /preorder/:id fails with invalid ID', async (t) => {
+    try {
+        // Step 1: Fetch existing preOrders
+        const { body: preOrders } = await t.context.got('preorder', { responseType: 'json' });
+
+        // Step 2: Generate a non-existing ID
+        const existingIDs = preOrders.map(preOrder => preOrder.id);
+        const invalidID = existingIDs.length ? Math.max(...existingIDs.map(Number)) + 1 : 9999;
+
+        // Step 3: Attempt to fetch a non-existent preorder
+        const error = await t.throwsAsync(() =>
+            t.context.got.get(`preorder/${invalidID}`, {
+                searchParams: { restaurant_name: 'Restaurant' },
+            })
+        );
+
+        // Step 4: Validate the response
+        t.is(error.response.statusCode, 404);
+        t.is(error.response.body.message, 'Preorder not found');
+    } catch (err) {
+        t.fail('Unexpected error: ' + err.message);
+    }
+});
