@@ -69,3 +69,153 @@ test('GET /directions should return error if restaurantName is empty', async (t)
   }
 });
 
+
+test('GET /directions should return direction details for multiple restaurant names', async (t) => {
+  const restaurantNames = ['Restaurant One', 'Restaurant Two'];
+  const encodedRestaurantNames = restaurantNames.map(name => encodeURIComponent(name));
+
+  try {
+    const responses = await Promise.all(encodedRestaurantNames.map(restaurantName =>
+      t.context.got.get('directions', {
+        searchParams: { restaurantName },
+        responseType: 'json',
+      })
+    ));
+
+    responses.forEach((response, index) => {
+      console.log(`Response for ${restaurantNames[index]}:`, response.body);
+      t.is(response.statusCode, 200); // Expected 200 status
+      t.deepEqual(response.body, {
+        address: "address",
+        id: "id",
+      }); // Expected response structure
+    });
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    t.fail('Unexpected error: ' + (err.response ? err.response.body : err.message));
+  }
+});
+
+
+test('GET /directions should return direction details for a long restaurant name', async (t) => {
+  const restaurantName = 'A very long restaurant name that exceeds usual length'; // Long restaurant name
+  const encodedRestaurantName = encodeURIComponent(restaurantName);
+
+  try {
+    const response = await t.context.got.get('directions', {
+      searchParams: { restaurantName: encodedRestaurantName },
+      responseType: 'json',
+    });
+
+    console.log('Response Status:', response.statusCode);
+    console.log('Response Body:', response.body);
+    t.is(response.statusCode, 200); // Expected 200 for valid name
+    t.deepEqual(response.body, {
+      address: "address",
+      id: "id",
+    }); // Expected response structure
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    t.fail('Unexpected error: ' + (err.response ? err.response.body : err.message));
+  }
+});
+
+
+
+test('GET /directions should handle restaurantName with spaces correctly', async (t) => {
+  const restaurantName = 'Restaurant with spaces';
+  const encodedRestaurantName = encodeURIComponent(restaurantName);
+
+  try {
+    const response = await t.context.got.get('directions', {
+      searchParams: { restaurantName: encodedRestaurantName },
+      responseType: 'json',
+    });
+
+    console.log('Response Status:', response.statusCode);
+    console.log('Response Body:', response.body);
+    t.is(response.statusCode, 200); // Expected 200 status code
+    t.deepEqual(response.body, {
+      address: "address",
+      id: "id",
+    }); // Expected response structure
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    t.fail('Unexpected error: ' + (err.response ? err.response.body : err.message));
+  }
+});
+
+
+test('GET /directions should return direction details for a restaurant name with mixed case', async (t) => {
+  const restaurantName = 'Test Restaurant'; // Mixed case name
+  const encodedRestaurantName = encodeURIComponent(restaurantName);
+
+  try {
+    const response = await t.context.got.get('directions', {
+      searchParams: { restaurantName: encodedRestaurantName },
+      responseType: 'json',
+    });
+
+    console.log('Response Status:', response.statusCode);
+    console.log('Response Body:', response.body);
+    t.is(response.statusCode, 200); // Expected 200 status code
+    t.deepEqual(response.body, {
+      address: "address",
+      id: "id",
+    }); // Expected response structure
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    t.fail('Unexpected error: ' + (err.response ? err.response.body : err.message));
+  }
+});
+
+test('GET /directions should return a response with the correct body structure', async (t) => {
+  const restaurantName = 'Test Restaurant';
+  const encodedRestaurantName = encodeURIComponent(restaurantName);
+
+  try {
+    const response = await t.context.got.get('directions', {
+      searchParams: { restaurantName: encodedRestaurantName },
+      responseType: 'json',
+    });
+
+    console.log('Response Status:', response.statusCode);
+    console.log('Response Body:', response.body);
+
+    // Check the structure of the response body
+    t.is(response.statusCode, 200);
+    t.truthy(response.body.address, 'Expected "address" field in response body');
+    t.truthy(response.body.id, 'Expected "id" field in response body');
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    t.fail('Unexpected error: ' + (err.response ? err.response.body : err.message));
+  }
+});
+
+
+test('GET /directions should return error if the request times out', async (t) => {
+  const restaurantName = 'Test Restaurant';
+  const encodedRestaurantName = encodeURIComponent(restaurantName);
+
+  try {
+    const error = await t.throwsAsync(() =>
+      t.context.got.get('directions', {
+        searchParams: { restaurantName: encodedRestaurantName },
+        timeout: 1, // Very short timeout to simulate a timeout error
+        responseType: 'json',
+      })
+    );
+
+    // Log error properties for debugging
+    console.log('Error Code:', error.code);
+    console.log('Error Message:', error.message);
+
+    // Ensure that the error is indeed a timeout
+    t.is(error.code, 'ETIMEDOUT', 'Expected timeout error code');
+  } catch (err) {
+    console.error('Unexpected error:', err.message);
+    t.fail('Unexpected error: ' + err.message);
+  }
+});
+
+
