@@ -71,4 +71,3 @@ it('POST /payBookingFee', () =>{
       });
 
 });
-  
