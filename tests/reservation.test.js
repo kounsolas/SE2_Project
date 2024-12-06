@@ -156,6 +156,49 @@ test('POST /reservations fails with invalid data', async (t) => {
 });
 
 
+// POST /reservations - Αποτυχία δημιουργίας κράτησης χωρίς το όνομα του εστιατορίου
+test('POST /reservations fails without RestaurantName', async (t) => {
+    const client = t.context.got;
+    const newReservation = {
+        date: '2024-12-01T20:00:00Z',
+        allergies: 'None',
+        time: '2024-12-01T20:00:00Z',
+    };
+
+    try {
+        await client.post('reservations', {
+            json: newReservation,
+            responseType: 'json',
+        });
+        t.fail('POST should have failed without RestaurantName');
+    } catch (err) {
+        t.is(err.response?.statusCode, 400, 'Expected status 400 for missing RestaurantName');
+        t.truthy(err.response?.body, 'Expected response body for missing RestaurantName');
+    }
+});
+
+
+test('PUT /reservations/{id} fails with invalid fields', async (t) => {
+    const client = t.context.got;
+    const reservationId = '105';
+    const invalidData = {
+        date: 'invalid-date',
+        time: 'invalid-time',
+        allergies: 123, // Μη έγκυρη τιμή
+    };
+
+    try {
+        await client.put(`reservations/${reservationId}`, {
+            json: invalidData,
+            responseType: 'json',
+        });
+        t.fail('Request should have failed with invalid fields');
+    } catch (err) {
+        t.is(err.response?.statusCode, 400, 'Expected status 400 for invalid fields');
+        t.truthy(err.response?.body, 'Expected response body for invalid fields');
+    }
+});
+
 
 
 
