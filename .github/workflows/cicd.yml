@@ -29,7 +29,7 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           start: npm start # start the server
-          wait-on: 'http://localhost:8000/docs' # run the cypress tests on our server
+          wait-on: 'http://localhost:8080/docs' # run the cypress tests on our server
   
   cd:
     runs-on: ubuntu-latest

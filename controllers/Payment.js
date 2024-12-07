@@ -23,6 +23,10 @@ module.exports.payBookingFee = function payBookingFee (req, res, next, body) {
       return utils.writeJson(res, { message: 'Cardholder name is too long' }, 400);
   }
 
+  if(!isValidCardHolderName(body.cardHolderName)){
+    return utils.writeJson(res, {message: 'Invalid Card Holder Name'}, 400);
+  }
+
   if(!isValidCardNumber(body.cardNumber)){
     return utils.writeJson(res, {message: 'Invalid Card number'}, 400);
   }
@@ -46,6 +50,11 @@ module.exports.payBookingFee = function payBookingFee (req, res, next, body) {
 
 module.exports.wrongMethod = function wrongMethod(req, res) {
   res.status(405).json({message: "Method not allowed"});
+}
+
+function isValidCardHolderName(cardHolderName){
+  const regex = /^[A-Za-z\s]+$/;
+  return regex.test(cardHolderName);
 }
 
 function isValidCardNumber(cardNumber) {

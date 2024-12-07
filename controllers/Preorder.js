@@ -13,59 +13,60 @@ module.exports.preOrderGET = function preOrderGET (req, res, next) {
     });
 };
 
-module.exports.preOrderIdDELETE = function preOrderIdDELETE (req, res, next, id) {
+module.exports.preOrderIdDELETE = function preOrderIdDELETE(req, res, next, id) {
   Preorder.preOrderIdDELETE(id)
-    .then(function (response) {
-      utils.writeJson(res, response);
+    .then(function () {
+      res.status(204).end(); // Return 204 No Content on success
     })
     .catch(function (response) {
-      utils.writeJson(res, response);
+      utils.writeJson(res, response, response.status || 500);
     });
 };
 
-module.exports.preOrderIdGET = function preOrderIdGET (req, res, next, id, restaurant_name) {
-  Preorder.preOrderIdGET(id, restaurant_name)
-    .then(function (response) {
-      utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
-    });
-};
-
-module.exports.preOrderIdPUT = function preOrderIdPUT (req, res, next, body, restaurant_name, id) {
-  Preorder.preOrderIdPUT(body, restaurant_name, id)
-    .then(function (response) {
-      utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
-    });
-};
-
-
-// module.exports.preOrderPOST = function preOrderPOST(req, res, next, body) {
-//   const { price, name, id, restaurant_name } = body;
-
-//   // Validate required fields
-//   const missingFields = [];
-//   if (!price) missingFields.push('price');
-//   if (!name) missingFields.push('name');
-//   if (!id) missingFields.push('id');
-//   if (!restaurant_name) missingFields.push('restaurant_name');
-
-//   if (missingFields.length > 0) {
-//     const error = { message: `Missing required field(s): ${missingFields.join(' ')}` };
-//     return utils.writeJson(res, error, 400); // Return 400 for bad requests
-//   }
-
-//   Preorder.preOrderPOST(body)
-//     .then((response) => utils.writeJson(res, response))
-//     .catch((err) => {
-//       console.error('Error:', err);
-//       utils.writeJson(res, err, err.statusCode || 500);
+// module.exports.preOrderIdGET = function preOrderIdGET (req, res, next, restaurant_name, id) {
+  
+//   Preorder.preOrderIdGET(id, restaurant_name)
+//     .then(function (response) {
+//       utils.writeJson(res, response);
+//     })
+//     .catch(function (response) {
+//       utils.writeJson(res, response);
 //     });
 // };
+
+module.exports.preOrderIdGET = function preOrderIdGET(req, res, next, restaurant_name, id) {
+  Preorder.preOrderIdGET(id, restaurant_name)
+      .then(function (response) {
+          utils.writeJson(res, response); // Send the preorder as the response
+      })
+      .catch(function (error) {
+          if (error.message === 'Preorder not found') {
+              // If the error is a "Preorder not found", send a 404 response
+              utils.writeJson(res, { message: error.message }, 404);
+          } else {
+              // For any other errors, send a 500 Internal Server Error response
+              utils.writeJson(res, { message: 'Internal server error' }, 500);
+          }
+      });
+};
+
+
+module.exports.preOrderIdPUT = function preOrderIdPUT(req, res, next, body, restaurant_name, id) {
+  // console.log('req.params:', req.params); // Log the params for debugging
+  // console.log('req.query:', req.query);   // Log the query for debugging
+  // console.log('req.body:', req.body);     // Log the body for debugging
+  console.log('restaurant_name:', restaurant_name); // Log the restaurant_name for debugging
+  console.log('id:', id); // Log the id for debugging
+
+  Preorder.preOrderIdPUT(req.body,restaurant_name,id)
+      .then(function (response) {
+          utils.writeJson(res, response);
+      })
+      .catch(function (response) {
+          utils.writeJson(res, response, response.status || 500);
+      });
+};
+
 
 module.exports.preOrderPOST = function preOrderPOST(req, res, next, body = {}) {
   const { price, name, id, restaurant_name } = body;
@@ -91,3 +92,40 @@ module.exports.preOrderPOST = function preOrderPOST(req, res, next, body = {}) {
       utils.writeJson(res, error, error.statusCode || 500);
     });
 };
+
+// module.exports.preOrderPOST = function preOrderPOST(req, res, next, body = {}) {
+//   const { price, name, id, restaurant_name } = body;
+
+//   // Validate required fields
+//   const missingFields = [];
+//   if (price == null) missingFields.push('price'); // Explicitly check for null/undefined
+//   if (name == null) missingFields.push('name');
+//   if (id == null) missingFields.push('id');
+//   if (restaurant_name == null) missingFields.push('restaurant_name');
+
+//   if (missingFields.length > 0) {
+//       const error = { message: `Missing required field(s): ${missingFields.join(' ')}` };
+//       console.error('Error in preOrderPOST:', error);
+//       return utils.writeJson(res, error, 400); // Return 400 for bad requests
+//   }
+
+//   // Check for duplicate preorders in the controller
+//   const exists = preOrders.some(order => 
+//       order.id === id && order.restaurant_name === restaurant_name
+//   );
+
+//   if (exists) {
+//       const error = { message: 'Duplicate preorder with the same id and restaurant_name' };
+//       console.error('Error in preOrderPOST:', error);
+//       return utils.writeJson(res, error, 400); // Return 400 for duplicate errors
+//   }
+
+//   // Proceed to create the preorder if no duplicates are found
+//   Preorder.preOrderPOST(body)
+//       .then((response) => utils.writeJson(res, response))
+//       .catch((error) => {
+//           console.error('Error in preOrderPOST:', error);
+//           console.error('Error details:', error.message); // Log error details
+//           utils.writeJson(res, error, error.statusCode || 500);
+//       });
+// };
