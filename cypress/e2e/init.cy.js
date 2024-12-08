@@ -10,10 +10,10 @@ it('GET /search', () => {
     cy.get("button.btn.execute.opblock-control__btn").click();
   
     // Extract and process the response text
-    cy.get("pre.microlight").invoke("text").then((responseText) => {
+    cy.get("pre.microlight").invoke("text").then(async (responseText) => {
       // Split the response by any known separator (if applicable)
       // cy.log(responseText);
-      const responses = responseText.split('][').map((res) => {
+      const responses = await responseText.split('][').map((res) => {
         return res.replace(/[\[\]]/g, '').trim(); // Remove brackets and whitespace
       });
       // cy.log(responses[0])
@@ -52,10 +52,10 @@ it('POST /payBookingFee', () => {
 
   cy.get('pre.microlight')
     .invoke('text')
-    .then((responseText) => {
+    .then(async (responseText) => {
       cy.log(responseText); // Debug log
 
-      const parsedResponse = JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
+      const parsedResponse = await JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
 
       expect(parsedResponse).to.deep.equal({
         success: true,
@@ -81,10 +81,10 @@ it('POST /payBookingFee Wrong CVC', () => {
 
   cy.get('pre.microlight')
     .invoke('text')
-    .then((responseText) => {
+    .then(async (responseText) => {
       cy.log(responseText); // Debug log
 
-      const parsedResponse = JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
+      const parsedResponse = await JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
 
       expect(parsedResponse).to.deep.equal({
         "message": "Invalid CVC"
@@ -111,10 +111,10 @@ it('POST /payBookingFee Wrong Card Holder Name', () => {
 
   cy.get('pre.microlight')
     .invoke('text')
-    .then((responseText) => {
+    .then(async (responseText) => {
       cy.log(responseText); // Debug log
 
-      const parsedResponse = JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
+      const parsedResponse = await JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
 
       expect(parsedResponse).to.deep.equal({
         "message": "Invalid Card Holder Name"
@@ -172,10 +172,10 @@ it('POST /payBookingFee Wrong CardNumber', () => {
 
   cy.get('pre.microlight')
     .invoke('text')
-    .then((responseText) => {
+    .then(async (responseText) => {
       cy.log(responseText); // Debug log
 
-      const parsedResponse = JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
+      const parsedResponse = await JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
 
       expect(parsedResponse).to.deep.equal({
         "message": "Invalid Card number"
@@ -201,10 +201,10 @@ it('POST /payBookingFee Wrong Date', () => {
 
   cy.get('pre.microlight')
     .invoke('text')
-    .then((responseText) => {
+    .then(async (responseText) => {
       cy.log(responseText); // Debug log
 
-      const parsedResponse = JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
+      const parsedResponse = await JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
 
       expect(parsedResponse).to.deep.equal({
         "message": "Invalid Date"
@@ -230,10 +230,10 @@ it('POST /payBookingFee Everything Missing', () => {
 
   cy.get('pre.microlight')
     .invoke('text')
-    .then((responseText) => {
+    .then(async (responseText) => {
       cy.log(responseText); // Debug log
 
-      const parsedResponse = JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
+      const parsedResponse = await JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
 
       expect(parsedResponse).to.deep.equal({
         "message": "request.body.cardHolderName should be string, request.body.cardNumber should be string, request.body.CVC should be number, request.body.expirationDate should be string",
