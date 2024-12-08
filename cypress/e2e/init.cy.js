@@ -123,37 +123,6 @@ it('POST /payBookingFee Wrong Card Holder Name', () => {
 });
 
 
-// it('POST /payBookingFee Wrong Name', () => {
-//   cy.visit('http://localhost:8080/docs/#/payment/payBookingFee');
-//   cy.get('button.btn.try-out__btn').click();
-//   const paymentData = `{
-//     "cardHolderName": "${'J'.repeat(300)}",
-//     "cardNumber": "9876543210987654",
-//     "CVC": 456,
-//     "expirationDate": "12/2028"
-//   }`;
-
-//   cy.get('textarea.body-param__text')
-//     .clear()
-//     .type(paymentData, { parseSpecialCharSequences: false });
-
-//   cy.get('button.btn.execute.opblock-control__btn').click();
-
-//   cy.get('pre.microlight')
-//     .invoke('text')
-//     .then((responseText) => {
-//       cy.log(responseText); // Debug log
-
-//       const parsedResponse = JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
-//       cy.log(parsedResponse);
-
-//       expect(parsedResponse).to.deep.equal({
-//          "message": "Cardholder name is too long"
-//       });
-//     });
-// });
-
-
 it('POST /payBookingFee Wrong CardNumber', () => {
   cy.visit('http://localhost:8080/docs/#/payment/payBookingFee');
   cy.get('button.btn.try-out__btn').click();
@@ -262,3 +231,99 @@ it('POST /payBookingFee Everything Missing', () => {
       });
     });
 });
+
+
+
+
+
+
+// Test GET /preorder
+it('GET /preorder', () => {
+  cy.visit('http://localhost:8080/docs/#/preorder/preOrderGET');
+  cy.get('button.btn.try-out__btn').click();
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+// Test POST /preorder
+it('POST /preorder', () => {
+  cy.visit('http://localhost:8080/docs/#/preorder/preOrderPOST');
+  cy.get('button.btn.try-out__btn').click();
+
+  const preorderData = `{
+      "id": "789",
+      "restaurant_name": "Souvlaki House",
+      "items": ["Souvlaki", "Tzatziki"]
+  }`;
+
+  cy.get('textarea.body-param__text')
+      .clear()
+      .type(preorderData, { parseSpecialCharSequences: false });
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+// Test POST /preorder duplicate
+it('POST /preorder Duplicate', () => {
+  cy.visit('http://localhost:8080/docs/#/preorder/preOrderPOST');
+  cy.get('button.btn.try-out__btn').click();
+
+  const preorderData = `{
+      "id": "123",
+      "restaurant_name": "Mamalouka",
+      "items": ["Pizza"]
+  }`;
+
+  cy.get('textarea.body-param__text')
+      .clear()
+      .type(preorderData, { parseSpecialCharSequences: false });
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+
+
+
+
+// Test GET /preorder/:id
+it('GET /preorder/:id', () => {
+  cy.visit('http://localhost:8080/docs/#/preorder/preOrderIdGET');
+  cy.get('button.btn.try-out__btn').click();
+
+  // Set the path parameter
+  cy.get('input[placeholder="id"]').clear().type('123');
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+// Test PUT /preorder/:id
+it('PUT /preorder/:id', () => {
+  cy.visit('http://localhost:8080/docs/#/preorder/preOrderIdPUT');
+  cy.get('button.btn.try-out__btn').click();
+
+  // Set the path parameter
+  cy.get('input[placeholder="id"]').clear().type('123');
+
+  const updateData = `{
+      "restaurant_name": "Updated Mamalouka",
+      "items": ["Updated Pizza", "Updated Pasta"]
+  }`;
+
+  cy.get('textarea.body-param__text')
+      .clear()
+      .type(updateData, { parseSpecialCharSequences: false });
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+// Test DELETE /preorder/:id
+it('DELETE /preorder/:id', () => {
+  cy.visit('http://localhost:8080/docs/#/preorder/preOrderIdDELETE');
+  cy.get('button.btn.try-out__btn').click();
+
+  // Set the path parameter
+  cy.get('input[placeholder="id"]').clear().type('123');
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+
+});
+
