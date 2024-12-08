@@ -37,7 +37,6 @@ jobs:
 
     steps:
       - name: Render Deployment # after CI is completed, deploy the server on Render
-        uses: johnbeynon/render-deploy-action@v0.0.8
-        with:
-          service-id: ${{ secrets.RENDER_SERVICE_ID }} # use the Service ID key provided by Render
-          api-key: ${{ secrets.RENDER_API_KEY }} # use the API key generated from Render
+        run: |
+              curl -X POST "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
+              -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
