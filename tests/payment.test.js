@@ -189,6 +189,22 @@ test.serial('POST /payBookingFee fails with overly long card holder name', async
     t.is(error.message, 'Response code 400 (Bad Request)');
 });
 
+test.serial('POST /payBookingFee fails with wrong name input', async (t) => {
+    const requestBody = {
+        "cardHolderName": "John$%Doe",  // wrong name
+        "cardNumber": "1234567891234568",
+        "CVC": 123,
+        "expirationDate": "07/2026"
+    };
+
+    const error = await t.throwsAsync(() => t.context.got.post('payBookingFee', {
+        json: requestBody,
+        responseType: 'json'
+    }));
+
+    t.is(error.message, 'Response code 400 (Bad Request)');
+});
+
 test('POST /payBookingFee fails with invalid card number', async(t) => {
     const requestBody = {
         "cardHolderName": "John Doe",
