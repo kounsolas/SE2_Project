@@ -19,7 +19,7 @@ it('GET /search', () => {
       // cy.log(responses[0])
   
       // Parse and validate the first response
-      const parsedResponse = JSON.parse(`[${responses[0]}]`); // Wrap with brackets
+      const parsedResponse = await JSON.parse(`[${responses[0]}]`); // Wrap with brackets
       cy.log(parsedResponse)
       expect(parsedResponse).to.deep.equal([
         {
