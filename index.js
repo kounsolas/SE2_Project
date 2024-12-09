@@ -19,7 +19,7 @@ const options = {
 const expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/openapi.yaml'), options);
 const app = express();
 
-app.get("/", (req, res, next) => {
+app.use("/", (req, res, next) => {
     return res.status(201).json({ message : "Success"});
 });
 
