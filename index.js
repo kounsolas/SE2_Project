@@ -27,10 +27,6 @@ app.use('/search', (req, res, next) => {
 });
 const swaggerApp = expressAppConfig.getApp();
 
-swaggerApp.use("/", (req, res, next) => {
-    return res.status(201).json({ message : "Success"});
-});
-
 app.use(swaggerApp);
 // Initialize the Swagger middleware
 // Start the server only if not in a test environment
