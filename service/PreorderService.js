@@ -7,6 +7,16 @@ let preOrders = [
   { price: 8, name: "pasta", id: "110", restaurant_name: "Pastabar" }
 ];
 
+// Check for duplicate preorders
+exports.checkDuplicate = function (id, restaurant_name) {
+  return new Promise((resolve) => {
+    const isDuplicate = preOrders.some(
+      (order) => order.id === id && order.restaurant_name === restaurant_name
+    );
+    resolve(isDuplicate); // Return true if duplicate exists
+  });
+};
+
 /**
  * Retrieve a list of menu items
  *
