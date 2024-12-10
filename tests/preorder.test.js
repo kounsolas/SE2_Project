@@ -71,32 +71,26 @@ test.serial('Post /preorder successful', async(t) => {
 
 
 // Testing POST /preorder fails when trying to create a duplicate preorder
-// test.serial('POST /preorder fails when trying to create a duplicate preorder', async (t) => {
-//     const duplicateRequestBody = {
-//         price: 9,
-//         name: "meat",
-//         id: "106", // Same ID as an existing preorder
-//         restaurant_name: "Restaurant" // Same restaurant_name as an existing preorder
-//     };
+test.serial('POST /preorder fails when trying to create a duplicate preorder', async (t) => {
+    const duplicateRequestBody = {
+        price: 7,
+        name: "salat",
+        id: "105", // Same ID as an existing preorder
+        restaurant_name: "Mamalouka" // Same restaurant_name as an existing preorder
+    };
 
-//     // First, create the initial preorder
-//     await t.context.got.post("preorder", {
-//         json: duplicateRequestBody,
-//         responseType: 'json'
-//     });
-
-//     // Attempt to create the duplicate preorder
-//     try {
-//         await t.context.got.post("preorder", {
-//             json: duplicateRequestBody,
-//             responseType: 'json'
-//         });
-//         t.fail('Request should have failed due to duplicate preorder.'); // This line should not be reached
-//     } catch (err) {
-//         t.is(err.response.statusCode, 400); // Expect a 400 Bad Request
-//         t.is(err.response.body.message, 'Duplicate preorder with the same id and restaurant_name'); // Validate the error message
-//     }
-// });
+    // Attempt to create the duplicate preorder
+    try {
+        await t.context.got.post("preorder", {
+            json: duplicateRequestBody,
+            responseType: 'json'
+        });
+        t.fail('Request should have failed due to duplicate preorder.'); // This line should not be reached
+    } catch (err) {
+        t.is(err.response.statusCode, 400); // Expect a 400 Bad Request
+        t.is(err.response.body.message, 'Duplicate preorder with ID '+duplicateRequestBody.id +' and restaurant_name ' +duplicateRequestBody.restaurant_name); // Validate the error message
+    }
+});
 
 
 
@@ -283,8 +277,6 @@ test.serial('Put /preorder/:id successful', async (t) => {
         restaurant_name: "Restaurant"
     };
 
-    // console.log("I tested this !!!!!!!!!!!!!!!!!!!!!!!");
-    // console.log('ID:!!!!!!!!!!!!!!!!!!!!', updatedBody.id, 'RESTAURANT_NAME:!!!!!!!!!!!!!!!!!!!!!!!!', updatedBody.restaurant_name);
 
     try {
         const response = await t.context.got.put(`preorder/106`, {
@@ -292,9 +284,6 @@ test.serial('Put /preorder/:id successful', async (t) => {
             searchParams: { restaurant_name: "Restaurant" }, // Include restaurant_name in the query
             responseType: 'json'
         });
-
-        //console.log('Response Status:', response.statusCode);
-        //console.log('Response Body:', response.body);
 
         t.is(response.statusCode, 200); // Expect a 200 status code
         t.deepEqual(response.body, { ...updatedBody, id: "106", restaurant_name: "Restaurant" }); // Check updated values

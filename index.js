@@ -26,6 +26,7 @@ app.use('/search', (req, res, next) => {
     next(); // Pass the request to the next middleware or handler
 });
 const swaggerApp = expressAppConfig.getApp();
+
 app.use(swaggerApp);
 // Initialize the Swagger middleware
 // Start the server only if not in a test environment

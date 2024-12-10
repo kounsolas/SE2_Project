@@ -23,17 +23,6 @@ module.exports.preOrderIdDELETE = function preOrderIdDELETE(req, res, next, id) 
     });
 };
 
-// module.exports.preOrderIdGET = function preOrderIdGET (req, res, next, restaurant_name, id) {
-  
-//   Preorder.preOrderIdGET(id, restaurant_name)
-//     .then(function (response) {
-//       utils.writeJson(res, response);
-//     })
-//     .catch(function (response) {
-//       utils.writeJson(res, response);
-//     });
-// };
-
 module.exports.preOrderIdGET = function preOrderIdGET(req, res, next, restaurant_name, id) {
   Preorder.preOrderIdGET(id, restaurant_name)
       .then(function (response) {
@@ -73,7 +62,7 @@ module.exports.preOrderPOST = function preOrderPOST(req, res, next, body = {}) {
 
   // Validate required fields
   const missingFields = [];
-  if (price == null) missingFields.push('price'); // Explicitly check for null/undefined
+  if (price == null) missingFields.push('price');
   if (name == null) missingFields.push('name');
   if (id == null) missingFields.push('id');
   if (restaurant_name == null) missingFields.push('restaurant_name');
@@ -81,15 +70,24 @@ module.exports.preOrderPOST = function preOrderPOST(req, res, next, body = {}) {
   if (missingFields.length > 0) {
     const error = { message: `Missing required field(s): ${missingFields.join(' ')}` };
     console.error('Error in preOrderPOST:', error);
-    return utils.writeJson(res, error, 400); // Return 400 for bad requests
+    return utils.writeJson(res, error, 400);
   }
 
-  Preorder.preOrderPOST(body)
-    .then((response) => utils.writeJson(res, response))
+  // Check for duplicates and create preorder
+  Preorder.checkDuplicate(id, restaurant_name)
+    .then((isDuplicate) => {
+      if (isDuplicate) {
+        return utils.writeJson(res, { message: `Duplicate preorder with ID ${id} and restaurant_name ${restaurant_name}` }, 400);
+      }
+
+      // If no duplicate, proceed to create the preorder
+      return Preorder.preOrderPOST(body).then((response) => {
+        utils.writeJson(res, response, 200); // 201 Created
+      });
+    })
     .catch((error) => {
       console.error('Error in preOrderPOST:', error);
-      console.error('Error details:', error.message); // Log error details
-      utils.writeJson(res, error, error.statusCode || 500);
+      utils.writeJson(res, { message: error.message }, error.statusCode || 500);
     });
 };
 

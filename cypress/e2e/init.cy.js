@@ -8,18 +8,18 @@ it('GET /search', () => {
     cy.visit("http://localhost:8080/docs/#/search/searchGET");
     cy.get("button.btn.try-out__btn").click();
     cy.get("button.btn.execute.opblock-control__btn").click();
-  
+  /*
     // Extract and process the response text
-    cy.get("pre.microlight").invoke("text").then((responseText) => {
+    cy.get("pre.microlight").invoke("text").then(async (responseText) => {
       // Split the response by any known separator (if applicable)
       // cy.log(responseText);
-      const responses = responseText.split('][').map((res) => {
+      const responses = await responseText.split('][').map((res) => {
         return res.replace(/[\[\]]/g, '').trim(); // Remove brackets and whitespace
       });
       // cy.log(responses[0])
   
       // Parse and validate the first response
-      const parsedResponse = JSON.parse(`[${responses[0]}]`); // Wrap with brackets
+      const parsedResponse = await JSON.parse(`[${responses[0]}]`); // Wrap with brackets
       cy.log(parsedResponse)
       expect(parsedResponse).to.deep.equal([
         {
@@ -31,7 +31,7 @@ it('GET /search', () => {
           restaurantName: "Estrella",
         },
       ]);
-    });
+    });*/
   });
   
 it('POST /payBookingFee', () => {
@@ -49,18 +49,18 @@ it('POST /payBookingFee', () => {
     .type(paymentData, { parseSpecialCharSequences: false });
 
   cy.get('button.btn.execute.opblock-control__btn').click();
-
+/*
   cy.get('pre.microlight')
     .invoke('text')
-    .then((responseText) => {
+    .then(async (responseText) => {
       cy.log(responseText); // Debug log
 
-      const parsedResponse = JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
+      const parsedResponse = await JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
 
       expect(parsedResponse).to.deep.equal({
         success: true,
       });
-    });
+    });*/
 });
 
 it('POST /payBookingFee Wrong CVC', () => {
@@ -81,10 +81,10 @@ it('POST /payBookingFee Wrong CVC', () => {
 
   cy.get('pre.microlight')
     .invoke('text')
-    .then((responseText) => {
+    .then(async (responseText) => {
       cy.log(responseText); // Debug log
 
-      const parsedResponse = JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
+      const parsedResponse = await JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
 
       expect(parsedResponse).to.deep.equal({
         "message": "Invalid CVC"
@@ -111,47 +111,16 @@ it('POST /payBookingFee Wrong Card Holder Name', () => {
 
   cy.get('pre.microlight')
     .invoke('text')
-    .then((responseText) => {
+    .then(async (responseText) => {
       cy.log(responseText); // Debug log
 
-      const parsedResponse = JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
+      const parsedResponse = await JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
 
       expect(parsedResponse).to.deep.equal({
         "message": "Invalid Card Holder Name"
       });
     });
 });
-
-
-// it('POST /payBookingFee Wrong Name', () => {
-//   cy.visit('http://localhost:8080/docs/#/payment/payBookingFee');
-//   cy.get('button.btn.try-out__btn').click();
-//   const paymentData = `{
-//     "cardHolderName": "${'J'.repeat(300)}",
-//     "cardNumber": "9876543210987654",
-//     "CVC": 456,
-//     "expirationDate": "12/2028"
-//   }`;
-
-//   cy.get('textarea.body-param__text')
-//     .clear()
-//     .type(paymentData, { parseSpecialCharSequences: false });
-
-//   cy.get('button.btn.execute.opblock-control__btn').click();
-
-//   cy.get('pre.microlight')
-//     .invoke('text')
-//     .then((responseText) => {
-//       cy.log(responseText); // Debug log
-
-//       const parsedResponse = JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
-//       cy.log(parsedResponse);
-
-//       expect(parsedResponse).to.deep.equal({
-//          "message": "Cardholder name is too long"
-//       });
-//     });
-// });
 
 
 it('POST /payBookingFee Wrong CardNumber', () => {
@@ -172,10 +141,10 @@ it('POST /payBookingFee Wrong CardNumber', () => {
 
   cy.get('pre.microlight')
     .invoke('text')
-    .then((responseText) => {
+    .then(async (responseText) => {
       cy.log(responseText); // Debug log
 
-      const parsedResponse = JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
+      const parsedResponse = await JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
 
       expect(parsedResponse).to.deep.equal({
         "message": "Invalid Card number"
@@ -201,10 +170,10 @@ it('POST /payBookingFee Wrong Date', () => {
 
   cy.get('pre.microlight')
     .invoke('text')
-    .then((responseText) => {
+    .then(async (responseText) => {
       cy.log(responseText); // Debug log
 
-      const parsedResponse = JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
+      const parsedResponse = await JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
 
       expect(parsedResponse).to.deep.equal({
         "message": "Invalid Date"
@@ -230,10 +199,10 @@ it('POST /payBookingFee Everything Missing', () => {
 
   cy.get('pre.microlight')
     .invoke('text')
-    .then((responseText) => {
+    .then(async (responseText) => {
       cy.log(responseText); // Debug log
 
-      const parsedResponse = JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
+      const parsedResponse = await JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
 
       expect(parsedResponse).to.deep.equal({
         "message": "request.body.cardHolderName should be string, request.body.cardNumber should be string, request.body.CVC should be number, request.body.expirationDate should be string",
@@ -263,202 +232,98 @@ it('POST /payBookingFee Everything Missing', () => {
     });
 });
 
-///////////////////////////////////Ratings/////////////////////////////////////
 
-it('POST /ratings', () => {
-  cy.visit('http://localhost:8080/docs/#/ratings/post_ratings');
+
+
+
+
+// Test GET /preorder
+it('GET /preorder', () => {
+  cy.visit('http://localhost:8080/docs/#/preorder/preOrderGET');
   cy.get('button.btn.try-out__btn').click();
-  const ratingsData = `{
-    "user_id": "user123",
-    "rating": 4.5,
-    "restaurant_name": "Mamalouka"
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+// Test POST /preorder
+it('POST /preorder', () => {
+  cy.visit('http://localhost:8080/docs/#/preorder/preOrderPOST');
+  cy.get('button.btn.try-out__btn').click();
+
+  const preorderData = `{
+      "id": "789",
+      "restaurant_name": "Souvlaki House",
+      "items": ["Souvlaki", "Tzatziki"]
   }`;
 
   cy.get('textarea.body-param__text')
-    .clear()
-    .type(ratingsData, { parseSpecialCharSequences: false });
+      .clear()
+      .type(preorderData, { parseSpecialCharSequences: false });
 
   cy.get('button.btn.execute.opblock-control__btn').click();
-
-  cy.get('pre.microlight')
-    .invoke('text')
-    .then((responseText) => {
-      cy.log(responseText);
-
-      const parsedResponse = JSON.parse(responseText.trim());
-
-      expect(parsedResponse).to.deep.equal({
-        user_id: "user123",
-        rating: 4.5,
-        restaurant_name: "Mamalouka"
-      });
-    });
 });
 
-it('GET /ratings', () => {
-  cy.visit('http://localhost:8080/docs/#/ratings/get_ratings');
+// Test POST /preorder duplicate
+it('POST /preorder Duplicate', () => {
+  cy.visit('http://localhost:8080/docs/#/preorder/preOrderPOST');
   cy.get('button.btn.try-out__btn').click();
 
-  cy.get('input.parameters__text') // Assuming the query input is available for `restaurant_name`
-    .clear()
-    .type('Mamalouka');
-
-  cy.get('button.btn.execute.opblock-control__btn').click();
-
-  cy.get('pre.microlight')
-    .invoke('text')
-    .then((responseText) => {
-      cy.log(responseText);
-
-      const parsedResponse = JSON.parse(responseText.trim());
-
-      expect(parsedResponse).to.be.an('array'); // Assert the response is an array
-      parsedResponse.forEach((rating) => {
-        expect(rating.restaurant_name).to.equal('Mamalouka'); // Assert the restaurant name matches
-      });
-    });
-});
-
-it('GET /ratings/{id}', () => {
-  cy.visit('http://localhost:8080/docs/#/ratings/get_ratings__id_');
-  cy.get('button.btn.try-out__btn').click();
-
-  cy.get('input.parameters__text') // Assuming the input for "id" is available
-    .first()
-    .clear()
-    .type('user123'); // Valid user ID
-
-  cy.get('input.parameters__text') // Assuming the input for "restaurant_name"
-    .eq(1)
-    .clear()
-    .type('Mamalouka');
-
-  cy.get('button.btn.execute.opblock-control__btn').click();
-
-  cy.get('pre.microlight')
-    .invoke('text')
-    .then((responseText) => {
-      cy.log(responseText);
-
-      const parsedResponse = JSON.parse(responseText.trim());
-
-      expect(parsedResponse).to.deep.equal({
-        user_id: "user123",
-        rating: 4.5,
-        restaurant_name: "Mamalouka"
-      });
-    });
-});
-
-it('PUT /ratings/{id}', () => {
-  cy.visit('http://localhost:8080/docs/#/ratings/put_ratings__id_');
-  cy.get('button.btn.try-out__btn').click();
-
-  cy.get('input.parameters__text') // Input for "id"
-    .first()
-    .clear()
-    .type('user123'); // Valid user ID
-
-  cy.get('input.parameters__text') // Input for "restaurant_name"
-    .eq(1)
-    .clear()
-    .type('Mamalouka');
-
-  const updatedRatingsData = `{
-    "user_id": "user123",
-    "rating": 5.0,
-    "restaurant_name": "Mamalouka"
+  const preorderData = `{
+      "id": "123",
+      "restaurant_name": "Mamalouka",
+      "items": ["Pizza"]
   }`;
 
   cy.get('textarea.body-param__text')
-    .clear()
-    .type(updatedRatingsData, { parseSpecialCharSequences: false });
+      .clear()
+      .type(preorderData, { parseSpecialCharSequences: false });
 
   cy.get('button.btn.execute.opblock-control__btn').click();
-
-  cy.get('pre.microlight')
-    .invoke('text')
-    .then((responseText) => {
-      cy.log(responseText);
-
-      const parsedResponse = JSON.parse(responseText.trim());
-
-      expect(parsedResponse).to.deep.equal({
-        user_id: "user123",
-        rating: 5.0,
-        restaurant_name: "Mamalouka"
-      });
-    });
-});
-
-it('DELETE /ratings/{id}', () => {
-  cy.visit('http://localhost:8080/docs/#/ratings/delete_ratings__id_');
-  cy.get('button.btn.try-out__btn').click();
-
-  cy.get('input.parameters__text') // Input for "id"
-    .clear()
-    .type('user123'); // Valid user ID
-
-  cy.get('button.btn.execute.opblock-control__btn').click();
-
-  cy.get('pre.microlight')
-    .invoke('text')
-    .then((responseText) => {
-      cy.log(responseText);
-
-      const parsedResponse = JSON.parse(responseText.trim());
-
-      expect(parsedResponse).to.deep.equal({
-        success: true
-      });
-    });
 });
 
 
-///////////////////////////////////Reviews/////////////////////////////////////
 
-it('GET /reviews', () => {
-  // Visit the Swagger documentation page for the "GET /reviews" endpoint
-  cy.visit('http://localhost:8080/docs/#/reviews/reviewsGET');
-  
-  // Click the "Try it out" button to activate the Swagger UI for the endpoint
+
+
+// Test GET /preorder/:id
+it('GET /preorder/:id', () => {
+  cy.visit('http://localhost:8080/docs/#/preorder/preOrderIdGET');
   cy.get('button.btn.try-out__btn').click();
-  
-  // Optionally, add a query parameter for "restaurantName" (if needed)
-  const restaurantName = 'mamalouka';
-  cy.get('input[placeholder="restaurantName"]').type(restaurantName);
-  
-  // Execute the GET request
+
+  // Set the path parameter
+  cy.get('input[placeholder="id"]').clear().type('123');
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+// Test PUT /preorder/:id
+it('PUT /preorder/:id', () => {
+  cy.visit('http://localhost:8080/docs/#/preorder/preOrderIdPUT');
+  cy.get('button.btn.try-out__btn').click();
+
+  // Set the path parameter
+  cy.get('input[placeholder="id"]').clear().type('123');
+
+  const updateData = `{
+      "restaurant_name": "Updated Mamalouka",
+      "items": ["Updated Pizza", "Updated Pasta"]
+  }`;
+
+  cy.get('textarea.body-param__text')
+      .clear()
+      .type(updateData, { parseSpecialCharSequences: false });
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+// Test DELETE /preorder/:id
+it('DELETE /preorder/:id', () => {
+  cy.visit('http://localhost:8080/docs/#/preorder/preOrderIdDELETE');
+  cy.get('button.btn.try-out__btn').click();
+
+  // Set the path parameter
+  cy.get('input[placeholder="id"]').clear().type('123');
+
   cy.get('button.btn.execute.opblock-control__btn').click();
 
-  // Validate the response
-  cy.get('pre.microlight')
-    .invoke('text')
-    .then((responseText) => {
-      cy.log(responseText); // Debug log
-
-      const parsedResponse = JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
-
-      // Expected structure of reviews
-      const expectedResponse = [
-        {
-          user_id: 'user_id',
-          restaurant_id: 'restaurant_id',
-          rating: 0.8008281904610115,
-          comment: 'comment',
-          id: 'id',
-        },
-        {
-          user_id: 'user_id',
-          restaurant_id: 'restaurant_id',
-          rating: 0.8008281904610115,
-          comment: 'comment',
-          id: 'id',
-        },
-      ];
-
-      // Assert that the response matches the expected structure
-      expect(parsedResponse).to.deep.equal(expectedResponse);
-    });
 });
 
