@@ -19,7 +19,10 @@ const options = {
 const expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/openapi.yaml'), options);
 const app = express();
 
-
+app.get("/", (req, res, next) => {
+    res.status(201).json({message : "Success"});
+    // next();
+});
 
 app.use('/search', (req, res, next) => {
     if (req.query.mockError === 'true') {
