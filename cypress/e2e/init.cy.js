@@ -262,3 +262,203 @@ it('POST /payBookingFee Everything Missing', () => {
       });
     });
 });
+
+///////////////////////////////////Ratings/////////////////////////////////////
+
+it('POST /ratings', () => {
+  cy.visit('http://localhost:8080/docs/#/ratings/post_ratings');
+  cy.get('button.btn.try-out__btn').click();
+  const ratingsData = `{
+    "user_id": "user123",
+    "rating": 4.5,
+    "restaurant_name": "Mamalouka"
+  }`;
+
+  cy.get('textarea.body-param__text')
+    .clear()
+    .type(ratingsData, { parseSpecialCharSequences: false });
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+
+  cy.get('pre.microlight')
+    .invoke('text')
+    .then((responseText) => {
+      cy.log(responseText);
+
+      const parsedResponse = JSON.parse(responseText.trim());
+
+      expect(parsedResponse).to.deep.equal({
+        user_id: "user123",
+        rating: 4.5,
+        restaurant_name: "Mamalouka"
+      });
+    });
+});
+
+it('GET /ratings', () => {
+  cy.visit('http://localhost:8080/docs/#/ratings/get_ratings');
+  cy.get('button.btn.try-out__btn').click();
+
+  cy.get('input.parameters__text') // Assuming the query input is available for `restaurant_name`
+    .clear()
+    .type('Mamalouka');
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+
+  cy.get('pre.microlight')
+    .invoke('text')
+    .then((responseText) => {
+      cy.log(responseText);
+
+      const parsedResponse = JSON.parse(responseText.trim());
+
+      expect(parsedResponse).to.be.an('array'); // Assert the response is an array
+      parsedResponse.forEach((rating) => {
+        expect(rating.restaurant_name).to.equal('Mamalouka'); // Assert the restaurant name matches
+      });
+    });
+});
+
+it('GET /ratings/{id}', () => {
+  cy.visit('http://localhost:8080/docs/#/ratings/get_ratings__id_');
+  cy.get('button.btn.try-out__btn').click();
+
+  cy.get('input.parameters__text') // Assuming the input for "id" is available
+    .first()
+    .clear()
+    .type('user123'); // Valid user ID
+
+  cy.get('input.parameters__text') // Assuming the input for "restaurant_name"
+    .eq(1)
+    .clear()
+    .type('Mamalouka');
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+
+  cy.get('pre.microlight')
+    .invoke('text')
+    .then((responseText) => {
+      cy.log(responseText);
+
+      const parsedResponse = JSON.parse(responseText.trim());
+
+      expect(parsedResponse).to.deep.equal({
+        user_id: "user123",
+        rating: 4.5,
+        restaurant_name: "Mamalouka"
+      });
+    });
+});
+
+it('PUT /ratings/{id}', () => {
+  cy.visit('http://localhost:8080/docs/#/ratings/put_ratings__id_');
+  cy.get('button.btn.try-out__btn').click();
+
+  cy.get('input.parameters__text') // Input for "id"
+    .first()
+    .clear()
+    .type('user123'); // Valid user ID
+
+  cy.get('input.parameters__text') // Input for "restaurant_name"
+    .eq(1)
+    .clear()
+    .type('Mamalouka');
+
+  const updatedRatingsData = `{
+    "user_id": "user123",
+    "rating": 5.0,
+    "restaurant_name": "Mamalouka"
+  }`;
+
+  cy.get('textarea.body-param__text')
+    .clear()
+    .type(updatedRatingsData, { parseSpecialCharSequences: false });
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+
+  cy.get('pre.microlight')
+    .invoke('text')
+    .then((responseText) => {
+      cy.log(responseText);
+
+      const parsedResponse = JSON.parse(responseText.trim());
+
+      expect(parsedResponse).to.deep.equal({
+        user_id: "user123",
+        rating: 5.0,
+        restaurant_name: "Mamalouka"
+      });
+    });
+});
+
+it('DELETE /ratings/{id}', () => {
+  cy.visit('http://localhost:8080/docs/#/ratings/delete_ratings__id_');
+  cy.get('button.btn.try-out__btn').click();
+
+  cy.get('input.parameters__text') // Input for "id"
+    .clear()
+    .type('user123'); // Valid user ID
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+
+  cy.get('pre.microlight')
+    .invoke('text')
+    .then((responseText) => {
+      cy.log(responseText);
+
+      const parsedResponse = JSON.parse(responseText.trim());
+
+      expect(parsedResponse).to.deep.equal({
+        success: true
+      });
+    });
+});
+
+
+///////////////////////////////////Reviews/////////////////////////////////////
+
+it('GET /reviews', () => {
+  // Visit the Swagger documentation page for the "GET /reviews" endpoint
+  cy.visit('http://localhost:8080/docs/#/reviews/reviewsGET');
+  
+  // Click the "Try it out" button to activate the Swagger UI for the endpoint
+  cy.get('button.btn.try-out__btn').click();
+  
+  // Optionally, add a query parameter for "restaurantName" (if needed)
+  const restaurantName = 'mamalouka';
+  cy.get('input[placeholder="restaurantName"]').type(restaurantName);
+  
+  // Execute the GET request
+  cy.get('button.btn.execute.opblock-control__btn').click();
+
+  // Validate the response
+  cy.get('pre.microlight')
+    .invoke('text')
+    .then((responseText) => {
+      cy.log(responseText); // Debug log
+
+      const parsedResponse = JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
+
+      // Expected structure of reviews
+      const expectedResponse = [
+        {
+          user_id: 'user_id',
+          restaurant_id: 'restaurant_id',
+          rating: 0.8008281904610115,
+          comment: 'comment',
+          id: 'id',
+        },
+        {
+          user_id: 'user_id',
+          restaurant_id: 'restaurant_id',
+          rating: 0.8008281904610115,
+          comment: 'comment',
+          id: 'id',
+        },
+      ];
+
+      // Assert that the response matches the expected structure
+      expect(parsedResponse).to.deep.equal(expectedResponse);
+    });
+});
+
