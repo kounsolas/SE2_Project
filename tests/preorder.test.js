@@ -58,8 +58,8 @@ test.serial('Post /preorder successful', async(t) => {
             responseType: 'json'
         });
 
-        console.log('Response Status:', response.statusCode);
-        console.log('Response Body:', response.body);
+        // console.log('Response Status:', response.statusCode);
+        // console.log('Response Body:', response.body);
 
         t.is(response.statusCode, 200); // Check if the status code is 200
         t.deepEqual(response.body, requestBody);  // Assert the response body matches the expected result 
@@ -259,8 +259,8 @@ test.serial('Get /preorder/:id successful', async (t) => {
             searchParams: { restaurant_name: "Restaurant" }
         });
 
-        console.log('Response Status:', response.statusCode);
-        console.log('Response Body:', response.body);
+        // console.log('Response Status:', response.statusCode);
+        // console.log('Response Body:', response.body);
 
 
         t.is(response.statusCode, 200); // Check if the status code is 200

@@ -91,9 +91,21 @@ test.serial('GET /search with mockError=true simulates a server error', async (t
       t.context.got('search', { searchParams: { mockError: 'true' } }) // Pass query parameter
     );
     
-    console.log('Error: ', error.response.statusCode);
+    // console.log('Error: ', error.response.statusCode);
     t.is(error.response.statusCode, 500); // Expect 500 Internal Server Error
     t.deepEqual(error.response.body, { error: 'Mock Error' }); // Check mock error response
   });
-  
+
+// Stress testing the search endpoint
+test('GET /search handles concurrent requests', async (t) => {
+    const requests = [...Array(10)].map(() => t.context.got('search'));
+    const responses = await Promise.all(requests);
+    responses.forEach((response) => {
+        t.is(response.statusCode, 200);
+        t.true(Array.isArray(response.body));
+    });
+});
+
+
+
 

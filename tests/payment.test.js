@@ -14,8 +14,8 @@ test('POST /payBookingFee successful ', async (t) => {
             responseType: 'json'
         });
     
-        console.log('Response Status:', response.statusCode);
-        console.log('Response Body:', response.body);   
+        // console.log('Response Status:', response.statusCode);
+        // console.log('Response Body:', response.body);   
     
         t.is(response.statusCode, 200); // Check if the status code is 200
         t.deepEqual(response.body, { success: true });  // Assert the response body matches the expected result

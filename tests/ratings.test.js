@@ -38,8 +38,8 @@ test('GET /ratings successful', async (t) => {
       responseType: 'json'
     });
 
-    console.log('Response Status:', response.statusCode);
-    console.log('Response Body:', response.body);
+    // console.log('Response Status:', response.statusCode);
+    // console.log('Response Body:', response.body);
 
     t.is(response.statusCode, 200); // Check if the status code is 200
     t.true(Array.isArray(response.body));  // Assert the response body is an array
@@ -61,8 +61,8 @@ test('GET /ratings/{id} successful', async (t) => {
       responseType: 'json',
     });
 
-    console.log('Response Status:', response.statusCode);
-    console.log('Response Body:', response.body);
+    // console.log('Response Status:', response.statusCode);
+    // console.log('Response Body:', response.body);
 
     t.is(response.statusCode, 200); // Expect status 200
     t.deepEqual(response.body, {
@@ -94,8 +94,8 @@ test('PUT /ratings/{id} successful', async (t) => {
       responseType: 'json'
     });
 
-    console.log('Response Status:', response.statusCode);
-    console.log('Response Body:', response.body);
+    // console.log('Response Status:', response.statusCode);
+    // console.log('Response Body:', response.body);
 
     t.is(response.statusCode, 200); // Check if the status code is 200
     t.deepEqual(response.body, requestBody);  // Assert the response body matches the updated data
@@ -114,8 +114,8 @@ test('DELETE /ratings/{id} successful', async (t) => {
       responseType: 'json'
     });
 
-    console.log('Response Status:', response.statusCode);
-    console.log('Response Body:', response.body);
+    // console.log('Response Status:', response.statusCode);
+    // console.log('Response Body:', response.body);
 
     t.is(response.statusCode, 200); // Check if the status code is 200
   } catch (err) {
