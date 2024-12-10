@@ -6,7 +6,7 @@ test('GET /directions should return direction details for a given restaurant nam
   const restaurantName = 'Test Restaurant'; // Το όνομα του εστιατορίου που θέλουμε να ελέγξουμε
   const encodedRestaurantName = encodeURIComponent(restaurantName); // Κωδικοποιούμε την παράμετρο
 
-  console.log('Encoded Restaurant Name:', encodedRestaurantName); // Logging κωδικοποιημένο όνομα
+  // console.log('Encoded Restaurant Name:', encodedRestaurantName); // Logging κωδικοποιημένο όνομα
 
   try {
     const response = await t.context.got.get('directions', {
@@ -14,8 +14,8 @@ test('GET /directions should return direction details for a given restaurant nam
       responseType: 'json',
     });
 
-    console.log('Response Status:', response.statusCode);
-    console.log('Response Body:', response.body);
+    // console.log('Response Status:', response.statusCode);
+    // console.log('Response Body:', response.body);
 
     t.is(response.statusCode, 200); // Ελέγχουμε αν ο κωδικός κατάστασης είναι 200
     t.deepEqual(response.body, {
@@ -39,7 +39,7 @@ test('GET /directions should return error if restaurantName is missing', async (
       })
     );
 
-    console.log('Error:', error.response.body);
+    // console.log('Error:', error.response.body);
     t.is(error.response.statusCode, 400); // Ελέγχουμε αν επιστρέφεται κωδικός 400 για λάθος αίτηση
   } catch (err) {
     console.error('Unexpected error:', err);
@@ -61,7 +61,7 @@ test('GET /directions should return error if restaurantName is empty', async (t)
       })
     );
 
-    console.log('Error:', error.response.body);
+    // console.log('Error:', error.response.body);
     t.is(error.response.statusCode, 400); // Ελέγχουμε αν επιστρέφεται κωδικός 400 για κενό όνομα
   } catch (err) {
     console.error('Unexpected error:', err);
@@ -83,7 +83,7 @@ test('GET /directions should return direction details for multiple restaurant na
     ));
 
     responses.forEach((response, index) => {
-      console.log(`Response for ${restaurantNames[index]}:`, response.body);
+      // console.log(`Response for ${restaurantNames[index]}:`, response.body);
       t.is(response.statusCode, 200); // Expected 200 status
       t.deepEqual(response.body, {
         address: "address",
@@ -107,8 +107,8 @@ test('GET /directions should return direction details for a long restaurant name
       responseType: 'json',
     });
 
-    console.log('Response Status:', response.statusCode);
-    console.log('Response Body:', response.body);
+    // console.log('Response Status:', response.statusCode);
+    // console.log('Response Body:', response.body);
     t.is(response.statusCode, 200); // Expected 200 for valid name
     t.deepEqual(response.body, {
       address: "address",
@@ -132,8 +132,8 @@ test('GET /directions should handle restaurantName with spaces correctly', async
       responseType: 'json',
     });
 
-    console.log('Response Status:', response.statusCode);
-    console.log('Response Body:', response.body);
+    // console.log('Response Status:', response.statusCode);
+    // console.log('Response Body:', response.body);
     t.is(response.statusCode, 200); // Expected 200 status code
     t.deepEqual(response.body, {
       address: "address",
@@ -156,8 +156,8 @@ test('GET /directions should return direction details for a restaurant name with
       responseType: 'json',
     });
 
-    console.log('Response Status:', response.statusCode);
-    console.log('Response Body:', response.body);
+    // console.log('Response Status:', response.statusCode);
+    // console.log('Response Body:', response.body);
     t.is(response.statusCode, 200); // Expected 200 status code
     t.deepEqual(response.body, {
       address: "address",
@@ -179,8 +179,8 @@ test('GET /directions should return a response with the correct body structure',
       responseType: 'json',
     });
 
-    console.log('Response Status:', response.statusCode);
-    console.log('Response Body:', response.body);
+    // console.log('Response Status:', response.statusCode);
+    // console.log('Response Body:', response.body);
 
     // Check the structure of the response body
     t.is(response.statusCode, 200);
@@ -207,8 +207,8 @@ test('GET /directions should return error if the request times out', async (t) =
     );
 
     // Log error properties for debugging
-    console.log('Error Code:', error.code);
-    console.log('Error Message:', error.message);
+    // console.log('Error Code:', error.code);
+    // console.log('Error Message:', error.message);
 
     // Ensure that the error is indeed a timeout
     t.is(error.code, 'ETIMEDOUT', 'Expected timeout error code');

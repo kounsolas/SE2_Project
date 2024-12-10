@@ -12,8 +12,8 @@ test('GET /reviews successful with restaurantName', async (t) => {
       responseType: 'json'
     });
 
-    console.log('Response Status:', response.statusCode);
-    console.log('Response Body:', response.body);
+    // console.log('Response Status:', response.statusCode);
+    // console.log('Response Body:', response.body);
 
     // Assert response status is 200
     t.is(response.statusCode, 200);
@@ -43,8 +43,8 @@ test('GET /reviews returns empty array for non-existent restaurantName', async (
       responseType: 'json'
     });
 
-    console.log('Response Status:', response.statusCode);
-    console.log('Response Body:', response.body);
+    // console.log('Response Status:', response.statusCode);
+    // console.log('Response Body:', response.body);
 
     // Assert response status is 200
     t.is(response.statusCode, 200);
@@ -64,8 +64,8 @@ test('GET /reviews returns all reviews when restaurantName is not provided', asy
       responseType: 'json'
     });
 
-    console.log('Response Status:', response.statusCode);
-    console.log('Response Body:', response.body);
+    // console.log('Response Status:', response.statusCode);
+    // console.log('Response Body:', response.body);
 
     // Assert response status is 200
     t.is(response.statusCode, 200);
