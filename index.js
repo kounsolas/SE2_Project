@@ -5,7 +5,7 @@ const http = require('http');
 const express = require('express');
 const oas3Tools = require('oas3-tools');
 const serverPort = 8080;
-// var utils = require('./utils/writer.js');
+var utils = require('./utils/writer.js');
 
 // swaggerRouter configuration
 const options = {
@@ -20,8 +20,9 @@ const expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/op
 const app = express();
 
 app.get("/", (req, res, next) => {
-    res.status(201).json({message : "Success"});
+    // res.status(201).json({message : "Success"});
     // next();
+    utils.writeJson(res, {message: "Success"}, 201);
 });
 
 app.use('/search', (req, res, next) => {
