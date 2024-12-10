@@ -35,39 +35,32 @@ it('GET /search', () => {
   });
   
 
-it('POST /payBookingFee', () =>{
+  it('POST /payBookingFee', () => {
     cy.visit('http://localhost:8080/docs/#/payment/payBookingFee');
     cy.get('button.btn.try-out__btn').click();
     const paymentData = `{
-    "cardHolderName": "John Doe",
-    "cardNumber": "9876543210987654",
-    "CVC": 456,
-    "expirationDate": "12/2028"
+      "cardHolderName": "John Doe",
+      "cardNumber": "9876543210987654",
+      "CVC": 456,
+      "expirationDate": "12/2028"
     }`;
+  
     cy.get('textarea.body-param__text')
-    .clear()
-    .type(paymentData, {parseSpecialCharSequences: false});
-
+      .clear()
+      .type(paymentData, { parseSpecialCharSequences: false });
+  
     cy.get('button.btn.execute.opblock-control__btn').click();
-    // cy.get('pre.microlight').then((element) => {
-    //     cy.log(element.text());
-    // });
-    cy.get("pre.microlight").invoke("text").then((responseText) => {
-        // Split the response by any known separator (if applicable)
-        // cy.log(responseText);
-        const responses = responseText.split('][').map((res) => {
-          return res.replace(/[\[\]]/g, '').trim(); // Remove brackets and whitespace
+  
+    cy.get('pre.microlight')
+      .invoke('text')
+      .then((responseText) => {
+        cy.log(responseText); // Debug log
+  
+        const parsedResponse = JSON.parse(responseText.trim()); // Trim to remove any leading/trailing spaces
+  
+        expect(parsedResponse).to.deep.equal({
+          success: true,
         });
-        // cy.log(responses[0])
-    
-        // Parse and validate the first response
-        const parsedResponse = JSON.parse(`[${responses[0]}]`); // Wrap with brackets
-        cy.log(parsedResponse)
-        expect(parsedResponse).to.deep.equal([
-          {
-            "success": true
-          }
-        ]);
       });
+  });
 
-});
