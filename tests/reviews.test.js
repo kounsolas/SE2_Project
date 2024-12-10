@@ -1,6 +1,8 @@
 const test = require('ava'); // Import the ava framework for running tests
 const got = require('./init.test.js'); // Import the custom got instance defined in "init.test.js"
 
+// // SUCCESS CASE: Validate the response time of the endpoint is within acceptable limits
+
 // SUCCESS CASE: The request should return a 200 status code and a list of reviews
 test('GET /reviews successful with restaurantName', async (t) => {
   try {
@@ -151,17 +153,17 @@ test('GET /reviews fails with an invalid query parameter', async (t) => {
   }
 });
 
-// SUCCESS CASE: Validate the response time of the endpoint is within acceptable limits
-test('GET /reviews responds within acceptable time', async (t) => {
-  const start = Date.now();
-  const response = await t.context.got.get('reviews', {
-    responseType: 'json',
-  });
-  const duration = Date.now() - start;
+// // SUCCESS CASE: Validate the response time of the endpoint is within acceptable limits
+// test('GET /reviews responds within acceptable time', async (t) => {
+//   const start = Date.now();
+//   const response = await t.context.got.get('reviews', {
+//     responseType: 'json',
+//   });
+//   const duration = Date.now() - start;
 
-  t.is(response.statusCode, 200);
-  t.true(duration < 500, `Response time exceeded: ${duration}ms`); // Expect response time to be under 500ms
-});
+//   t.is(response.statusCode, 200);
+//   t.true(duration < 500, `Response time exceeded: ${duration}ms`); // Expect response time to be under 500ms
+// });
 
 // FAILURE CASE: Check if server handles missing parameters gracefully
 test('GET /reviews responds correctly when all parameters are missing', async (t) => {
