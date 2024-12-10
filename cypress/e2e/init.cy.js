@@ -327,3 +327,115 @@ it('DELETE /preorder/:id', () => {
 
 });
 
+
+/////////////////////////Ratings/////////////////////////
+
+//Test GET Ratings
+it('GET /ratings', () => {
+  cy.visit('http://localhost:8080/docs/#/ratings/ratingsGET');
+  cy.get('button.btn.try-out__btn').click();
+
+  // Set the query parameter
+  cy.get('input[placeholder="restaurant_name"]').clear().type('Mamalouka');
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+
+//Test POST Ratings
+it('POST /ratings', () => {
+  cy.visit('http://localhost:8080/docs/#/ratings/ratingsPOST');
+  cy.get('button.btn.try-out__btn').click();
+
+  const ratingData = `{
+      "user_id": "user123",
+      "rating": 4.5,
+      "restaurant_name": "Mamalouka"
+  }`;
+
+  // Set the query parameter
+  cy.get('input[placeholder="restaurant_name"]').clear().type('Mamalouka');
+
+  // Set the request body
+  cy.get('textarea.body-param__text')
+    .clear()
+    .type(ratingData, { parseSpecialCharSequences: false });
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+
+//Test GET Ratings by ID
+it('GET /ratings/{id}', () => {
+  cy.visit('http://localhost:8080/docs/#/ratings/ratingsIdGET');
+  cy.get('button.btn.try-out__btn').click();
+
+  // Set the path parameter
+  cy.get('input[placeholder="id"]').clear().type('user123');
+
+  // Set the query parameter
+  cy.get('input[placeholder="restaurant_name"]').clear().type('Mamalouka');
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+//Test PUT Ratings by ID
+it('PUT /ratings/{id}', () => {
+  cy.visit('http://localhost:8080/docs/#/ratings/ratingsIdPUT');
+  cy.get('button.btn.try-out__btn').click();
+
+  // Set the path parameter
+  cy.get('input[placeholder="id"]').clear().type('user123');
+
+  // Set the query parameter
+  cy.get('input[placeholder="restaurant_name"]').clear().type('Mamalouka');
+
+  const updatedRatingData = `{
+      "user_id": "user123",
+      "rating": 5.0,
+      "restaurant_name": "Mamalouka"
+  }`;
+
+  // Set the request body
+  cy.get('textarea.body-param__text')
+    .clear()
+    .type(updatedRatingData, { parseSpecialCharSequences: false });
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+//Test DELETE Ratings by ID 
+it('DELETE /ratings/{id}', () => {
+  cy.visit('http://localhost:8080/docs/#/ratings/ratingsIdDELETE');
+  cy.get('button.btn.try-out__btn').click();
+
+  // Set the path parameter
+  cy.get('input[placeholder="id"]').clear().type('user123');
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+/////////////////////////Reviews/////////////////////////
+
+//Test GET Reviews
+it('GET /reviews', () => {
+  cy.visit('http://localhost:8080/docs/#/reviews/reviewsGET'); // Update this URL if necessary
+  cy.get('button.btn.try-out__btn').click();
+
+  // Optionally set the query parameter for filtering reviews by restaurant name
+  cy.get('input[placeholder="restaurantName"]')
+    .clear()
+    .type('Mamalouka'); 
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+
+  // // Example: Check if the response body contains reviews
+  // cy.get('.response-col_description')
+  //   .should('contain', '200')
+  //   .and('contain', 'array'); // Adjust based on Swagger UI's response display structure
+});
+
+
+
+
+
