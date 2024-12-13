@@ -423,7 +423,7 @@ it('GET /reviews', () => {
   cy.get('button.btn.try-out__btn').click();
 
   // Optionally set the query parameter for filtering reviews by restaurant name
-  cy.get('input[placeholder="restaurantName"]')
+  cy.get('input[placeholder="restaurantName - The name of the restaurant to filter reviews"]')
     .clear()
     .type('Mamalouka'); 
 

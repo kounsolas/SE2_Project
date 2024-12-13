@@ -6,7 +6,7 @@ test.serial('GET /reservations returns a list of reservations', async (t) => {
     const client = got(t); // Ανάκτηση του σωστού instance του got από το context
     try {
         const { body, statusCode } = await client('reservations'); // Κάνουμε GET αίτημα στο /reservations
-        console.log('GET /reservations Response:', body);
+        // console.log('GET /reservations Response:', body);
 
         t.is(statusCode, 200); // Ελέγχουμε αν η απόκριση είναι 200
         t.true(Array.isArray(body)); // Ελέγχουμε αν το σώμα της απόκρισης είναι πίνακας
@@ -39,8 +39,8 @@ test('POST /reservations creates a new reservation', async (t) => {
         });
 
         const { body, statusCode } = response;
-        console.log('POST /reservations Response Body:', body);
-        console.log('POST /reservations Status Code:', statusCode);
+        // console.log('POST /reservations Response Body:', body);
+        // console.log('POST /reservations Status Code:', statusCode);
 
         t.is(statusCode, 200, `Expected status 201 but got ${statusCode}`);
         t.truthy(body.id, 'ID should be returned');
@@ -75,7 +75,7 @@ test('GET /reservations/{id} returns a specific reservation', async (t) => {
     const reservationId = '105'; // Δοκιμαστικό ID, βεβαιώσου ότι υπάρχει στο API
     try {
         const { body, statusCode } = await client(`reservations/${reservationId}`);
-        console.log('GET /reservations/{id} Response:', body);
+        // console.log('GET /reservations/{id} Response:', body);
 
         t.is(statusCode, 200); // Ελέγχουμε αν η απόκριση είναι 200
         t.truthy(body.restaurantName); 
@@ -103,7 +103,7 @@ test('PUT /reservations/{id} updates a reservation', async (t) => {
             responseType: 'json',
         });
 
-        console.log('PUT /reservations/{id} Response:', body);
+        // console.log('PUT /reservations/{id} Response:', body);
 
         t.is(statusCode, 200, `Expected status 200 but got ${statusCode}`);
         t.deepEqual(new Date(body.date).toISOString(), updatedReservation.date, 'Date does not match');
@@ -121,7 +121,7 @@ test('DELETE /reservations/{id} cancels a reservation', async (t) => {
     const reservationId = '105'; // Δοκιμαστικό ID, βεβαιώσου ότι υπάρχει στο API
     try {
         const { statusCode } = await client.delete(`reservations/${reservationId}`);
-        console.log(`DELETE /reservations/{id} StatusCode: ${statusCode}`);
+        // console.log(`DELETE /reservations/{id} StatusCode: ${statusCode}`);
 
         t.is(statusCode, 200); // Καμία περιγραφή, μόνο επιτυχία
     } catch (err) {
