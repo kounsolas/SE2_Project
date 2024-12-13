@@ -437,5 +437,159 @@ it('GET /reviews', () => {
 
 
 
+it('GET /directions', () => {
+  cy.visit('http://localhost:8080/docs/#/directions/directionsGET');
+  cy.get('button.btn.try-out__btn').click();
+
+  // Set the query parameter
+  cy.get('input[placeholder="restaurantName"]').clear().type('Test Restaurant');
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+
+
+
+it('GET /directions missing parameter', () => {
+  cy.visit('http://localhost:8080/docs/#/directions/directionsGET');
+  cy.get('button.btn.try-out__btn').click();
+
+  // Do not provide a restaurant name
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+
+
+
+
+
+it('GET /reservations', () => {
+  cy.visit('http://localhost:8080/docs/#/reservations/listReservations');
+  cy.get('button.btn.try-out__btn').click();
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+
+  
+
+
+
+
+it('POST /reservations', () => {
+  cy.visit('http://localhost:8080/docs/#/reservations/makeReservation');
+  cy.get('button.btn.try-out__btn').click();
+
+  const newReservation = `{
+      "date": "2000-01-23T04:56:07.000Z",
+      "allergies": "None",
+      "time": "2024-12-01T20:00:00Z"
+  }`;
+
+  // Set query parameter
+  cy.get('input[placeholder="RestaurantName"]').clear().type('Mamalouka');
+
+  cy.get('textarea.body-param__text')
+    .clear()
+    .type(newReservation, { parseSpecialCharSequences: false });
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+
+
+it('GET /reservations', () => {
+  cy.visit('http://localhost:8080/docs/#/reservations/listReservations');
+  cy.get('button.btn.try-out__btn').click();
+
+  // Εκτέλεση του request χωρίς path ή query parameters
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+
+
+
+it('PUT /reservations/:id', () => {
+  cy.visit('http://localhost:8080/docs/#/reservations/updateReservation');
+  cy.get('button.btn.try-out__btn').click();
+
+  // Set the path parameter
+  cy.get('input[placeholder="id"]').clear().type('105');
+
+  const updateData = `{
+      "date": "2000-01-23T04:56:07.000Z",
+      "allergies": "Peanuts",
+      "time": "2024-12-01T20:00:00Z",
+      "restaurantName": "Mamalouka"
+  }`;
+
+  cy.get('textarea.body-param__text')
+    .clear()
+    .type(updateData, { parseSpecialCharSequences: false });
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+
+
+it('DELETE /reservations/:id', () => {
+  cy.visit('http://localhost:8080/docs/#/reservations/cancelReservation');
+  cy.get('button.btn.try-out__btn').click();
+
+  // Set the path parameter
+  cy.get('input[placeholder="id"]').clear().type('105');
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+
+
+it('POST /reservations invalid data', () => {
+  cy.visit('http://localhost:8080/docs/#/reservations/makeReservation');
+  cy.get('button.btn.try-out__btn').click();
+
+  const invalidReservation = `{
+      "date": "invalid-date",
+      "allergies": 123
+  }`;
+
+  // Set query parameter
+  cy.get('input[placeholder="RestaurantName"]').clear().type('Mamalouka');
+
+  cy.get('textarea.body-param__text')
+    .clear()
+    .type(invalidReservation, { parseSpecialCharSequences: false });
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+
+
+
+
+
+it('PUT /reservations/:id invalid data', () => {
+  cy.visit('http://localhost:8080/docs/#/reservations/updateReservation');
+  cy.get('button.btn.try-out__btn').click();
+
+  // Set the path parameter
+  cy.get('input[placeholder="id"]').clear().type('105');
+
+  const invalidData = `{
+      "date": "invalid-date",
+      "time": "invalid-time",
+      "allergies": 123
+  }`;
+
+  cy.get('textarea.body-param__text')
+    .clear()
+    .type(invalidData, { parseSpecialCharSequences: false });
+
+  cy.get('button.btn.execute.opblock-control__btn').click();
+});
+
+
+
+
+
 
 
