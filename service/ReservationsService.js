@@ -22,23 +22,26 @@ exports.cancelReservation = function(id) {
  * id String 
  * returns Reservation
  **/
-exports.getReservation = function(id) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "date" : "2000-01-23T04:56:07.000+00:00",
-  "allergies" : "Mushrooms",
-  "restaurantName" : "Mamalouka",
-  "id" : "105",
-  "time" : "2000-01-23T04:56:07.000+00:00"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+exports.getReservation = function (id, restaurantName) {
+  return new Promise(function (resolve, reject) {
+      const examples = {
+          '105': {
+              date: "2000-01-23T04:56:07.000+00:00",
+              allergies: "Mushrooms",
+              restaurant_name: restaurantName, // Return the dynamic restaurant name
+              id: "105",
+              time: "2000-01-23T04:56:07.000+00:00"
+          }
+      };
+
+      const reservation = examples[id];
+      if (!reservation) {
+          return reject({ statusCode: 404, message: 'Reservation not found' });
+      }
+
+      resolve(reservation);
   });
-}
+};
 
 
 
@@ -48,29 +51,32 @@ exports.getReservation = function(id) {
  *
  * returns List
  **/
-exports.listReservations = function() {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "date" : "2000-01-23T04:56:07.000+00:00",
-  "allergies" : "Mushrooms",
-  "restaurantName" : "Mamalouka",
-  "id" : "105",
-  "time" : "2000-01-23T04:56:07.000+00:00"
-}, {
-  "date" : "2000-01-23T04:56:07.000+00:00",
-  "allergies" : "Mushrooms",
-  "restaurantName" : "Mamalouka",
-  "id" : "105",
-  "time" : "2000-01-23T04:56:07.000+00:00"
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
+exports.listReservations = function (restaurantName) {
+  return new Promise(function (resolve, reject) {
+    const reservations = [
+      {
+        "date": "2000-01-23T04:56:07.000+00:00",
+        "allergies": "Mushrooms",
+        "restaurantName": "Mamalouka",
+        "id": "105",
+        "time": "2000-01-23T04:56:07.000+00:00"
+      }
+    ];
+
+    // Αν δεν υπάρχει restaurantName, επιστρέφουμε όλες τις κρατήσεις
+    if (!restaurantName) {
+      resolve(reservations);
     } else {
-      resolve();
+      const filtered = reservations.filter(r => r.restaurantName === restaurantName);
+      if (filtered.length === 0) {
+        reject(new Error('No reservations found for this restaurant'));
+      } else {
+        resolve(filtered);
+      }
     }
   });
-}
+};
+
 
 
 /**
@@ -81,23 +87,24 @@ exports.listReservations = function() {
  * restaurantName String 
  * returns Reservation
  **/
-exports.makeReservation = function(body,restaurantName) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "date" : "2000-01-23T04:56:07.000+00:00",
-  "allergies" : "Mushrooms",
-  "restaurantName" : "Mamalouka",
-  "id" : "105",
-  "time" : "2000-01-23T04:56:07.000+00:00"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+exports.makeReservation = function (body, restaurantName) {
+  return new Promise(function (resolve, reject) {
+      if (!restaurantName || !body) {
+          return reject({ statusCode: 400, message: 'Restaurant name and reservation body are required' });
+      }
+
+      const newReservation = {
+          id: Math.random().toString(36).substring(2, 9), // Generate random ID
+          ...body,
+          restaurant_name: restaurantName, // Include dynamic restaurant name
+      };
+
+      resolve(newReservation);
   });
-}
+};
+
+
+
 
 
 /**

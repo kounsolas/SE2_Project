@@ -508,6 +508,7 @@ it('GET /reservations', () => {
 
 
 
+
 it('PUT /reservations/:id', () => {
   cy.visit('http://localhost:8080/docs/#/reservations/updateReservation');
   cy.get('button.btn.try-out__btn').click();

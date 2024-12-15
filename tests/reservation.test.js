@@ -3,88 +3,91 @@ const { got } = require('./init.test'); // Εισάγουμε το got από τ
 
 // GET /reservations - Ελέγχει αν επιστρέφεται λίστα κρατήσεων
 test.serial('GET /reservations returns a list of reservations', async (t) => {
-    const client = got(t); // Ανάκτηση του σωστού instance του got από το context
-    try {
-        const { body, statusCode } = await client('reservations'); // Κάνουμε GET αίτημα στο /reservations
-        // console.log('GET /reservations Response:', body);
+    const client = got.extend({
+        prefixUrl: 'http://localhost:3000', // Ensure this is correct
+        responseType: 'json',
+        throwHttpErrors: false // Prevents got from rejecting the promise automatically
+    });
 
-        t.is(statusCode, 200); // Ελέγχουμε αν η απόκριση είναι 200
-        t.true(Array.isArray(body)); // Ελέγχουμε αν το σώμα της απόκρισης είναι πίνακας
+    try {
+        const response = await client.get('reservations'); // Perform GET request to /reservations
+        const { body, statusCode } = response;
+
+        console.log('Response status code:', statusCode);
+        console.log('Response body:', body);
+
+        t.is(statusCode, 200, 'The response should have status 200');
+        t.true(Array.isArray(body), 'The body should be an array');
 
         body.forEach((reservation) => {
-            t.truthy(reservation.restaurantName); // Ελέγχουμε αν υπάρχει το πεδίο restaurantName
-            t.truthy(reservation.date); // Ελέγχουμε αν υπάρχει το πεδίο date
+            t.truthy(reservation.restaurantName, 'The reservation should have restaurantName');
+            t.truthy(reservation.date, 'The reservation should have date');
         });
     } catch (err) {
-        console.error('Error in GET /reservations:', err.response ? err.response.body : err);
-        throw err;
+        console.error('Error in GET /reservations:', err);
+        t.fail('The test failed due to an error');
     }
 });
 
-test('POST /reservations creates a new reservation', async (t) => {
+
+// GET /reservations - Returns error for invalid restaurant name
+test.serial('GET /reservations returns error for invalid restaurant name', async (t) => {
+  const client = got(t); // Retrieve the correct instance of got
+  try {
+    const { body, statusCode } = await client('reservations', {
+      searchParams: { restaurantName: 'InvalidRestaurant' }, // Pass invalid restaurant name
+    });
+
+    t.is(statusCode, 404); // Expect a 404 status code
+    t.is(body.message, 'Rating not found'); // Expect the error message
+  } catch (err) {
+    console.error('Error in GET /reservations:', err.response ? err.response.body : err);
+    throw err;
+  }
+});
+
+
+test('POST /reservations creates a new reservation with any restaurant name', async (t) => {
     const client = t.context.got;
     const newReservation = {
-        date: '2000-01-23T04:56:07.000Z',
+        date: '2024-12-01T20:00:00Z',
         allergies: 'None',
-        time: '2024-12-01T20:00:00Z', // Ορθή μορφή ISO 8601 για ώρα
+        time: '2024-12-01T20:00:00Z',
     };
 
-    const restaurantName = 'Mamalouka'; // Το όνομα του εστιατορίου για το query string
+    const restaurantName = 'AnyRestaurant'; // Dynamic restaurant name
 
-    try {
-        const response = await client.post('reservations', {
-            searchParams: { RestaurantName: restaurantName }, // Χρήση searchParams για query string
-            json: newReservation,
-            responseType: 'json',
-        });
+    const response = await client.post('reservations', {
+        searchParams: { RestaurantName: restaurantName },
+        json: newReservation,
+        responseType: 'json',
+    });
 
-        const { body, statusCode } = response;
-        // console.log('POST /reservations Response Body:', body);
-        // console.log('POST /reservations Status Code:', statusCode);
+    const { body, statusCode } = response;
 
-        t.is(statusCode, 200, `Expected status 201 but got ${statusCode}`);
-        t.truthy(body.id, 'ID should be returned');
-        t.deepEqual(body.restaurantName, restaurantName, 'Restaurant name does not match');
-    } catch (err) {
-        console.error('Error in POST /reservations:', err);
+    t.is(statusCode, 201, 'Expected status 201 for successful reservation');
+    t.truthy(body.id, 'ID should be returned');
+    t.deepEqual(body.restaurant_name, restaurantName, 'Restaurant name does not match');
+});
 
-        if (err.response) {
-            console.error('Response Status Code:', err.response.statusCode);
-            console.error('Response Body:', JSON.stringify(err.response.body, null, 2));
-            console.error('Response Headers:', err.response.headers);
-        } else {
-            console.error('Unexpected Error:', err.message || err);
-        }
+test('GET /reservations/{id} returns reservation with any restaurant name', async (t) => {
+    const client = t.context.got;
+    const reservationId = '105';
+    const restaurantName = 'AnyRestaurant';
 
-        t.fail(
-            `POST request failed: ${
-                err.response ? JSON.stringify(err.response.body, null, 2) : err.message || err
-            }`
-        );
-    }
+    const response = await client(`reservations/${reservationId}`, {
+        searchParams: { RestaurantName: restaurantName },
+    });
+
+    const { body, statusCode } = response;
+
+    t.is(statusCode, 200, 'Expected status 200');
+    t.deepEqual(body.restaurant_name, restaurantName, 'Returned restaurant name does not match');
 });
 
 
 
 
-
-
-// GET /reservations/{id} - Επιστρέφει συγκεκριμένη κράτηση
-test('GET /reservations/{id} returns a specific reservation', async (t) => {
-    const client = got(t);
-    const reservationId = '105'; // Δοκιμαστικό ID, βεβαιώσου ότι υπάρχει στο API
-    try {
-        const { body, statusCode } = await client(`reservations/${reservationId}`);
-        // console.log('GET /reservations/{id} Response:', body);
-
-        t.is(statusCode, 200); // Ελέγχουμε αν η απόκριση είναι 200
-        t.truthy(body.restaurantName); 
-        t.deepEqual(body.id, reservationId);
-    } catch (err) {
-        console.error('Error in GET /reservations/{id}:', err.response ? err.response.body : err);
-        throw err;
-    }
-});
 
 // PUT /reservations/{id} - Ενημερώνει κράτηση
 test('PUT /reservations/{id} updates a reservation', async (t) => {
