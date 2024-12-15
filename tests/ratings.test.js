@@ -185,7 +185,6 @@ test('DELETE /ratings/{id} unsuccessful', async (t) => {
     // console.log('Response Status:', response.statusCode);
     // console.log('Response Body:', response.body);
 
-    // console.log("SHUT UP : ", error.response.body);
     t.is(error.response.statusCode, 404); // Check if the status code is 404
     t.is(error.response.body.error, "Rating not found");
   } catch (err) {
@@ -206,7 +205,7 @@ test('POST /ratings fails when required fields are missing (restaurant Name)', a
   // console.log("WHAAAAAAAAATTTTTTTTTTTTTTT");
 
   try{
-    console.log("PRINT THIS");
+    // console.log("PRINT THIS");
     const error = await t.throwsAsync(() => t.context.got.post(`ratings?restaurant_name=${restaurantName}`, {
       json: requestBody,
       responseType: 'json'
