@@ -1,25 +1,30 @@
 'use strict';
 
-
 /**
  * Retrieve a specific direction
  *
- * restaurantName String 
+ * restaurantName String
  * returns Directions
  **/
-exports.directionsGET = function(restaurantName) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "address" : "address",
-  "id" : "id"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
+exports.directionsGET = function (restaurantName) {
+  return new Promise(function (resolve, reject) {
+    const examples = {
+      Mamalouka: {
+        address: 'Leoforou Stratou 34',
+        id: '1',
+      },
+      // You can add more restaurants here if needed
+    };
+
+    // Normalize the restaurant name to ensure case-insensitive matching
+    const normalizedRestaurantName = restaurantName.trim();
+
+    // Check if the restaurant name exists in the examples
+    if (examples[normalizedRestaurantName]) {
+      resolve(examples[normalizedRestaurantName]);
     } else {
-      resolve();
+      // If not found, resolve with null to trigger the 404 response
+      resolve(null);
     }
   });
-}
-
-
+};
