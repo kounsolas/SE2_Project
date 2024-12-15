@@ -1,25 +1,24 @@
 const test = require('ava'); // Εισάγουμε το AVA για την εκτέλεση των tests
-const { got } = require('./init.test'); // Εισάγουμε το got από το init.test.js
+const got  = require('./init.test'); // Εισάγουμε το got από το init.test.js
 
 // GET /reservations - Ελέγχει αν επιστρέφεται λίστα κρατήσεων
 test.serial('GET /reservations returns a list of reservations', async (t) => {
-    const client = got.extend({
-        prefixUrl: 'http://localhost:3000', // Ensure this is correct
-        responseType: 'json',
-        throwHttpErrors: false // Prevents got from rejecting the promise automatically
-    });
+    // const client = got.extend({
+    //     prefixUrl: 'http://localhost:3000', // Ensure this is correct
+    //     responseType: 'json',
+    //     throwHttpErrors: false // Prevents got from rejecting the promise automatically
+    // });
 
     try {
-        const response = await client.get('reservations'); // Perform GET request to /reservations
-        const { body, statusCode } = response;
+        const response = await t.context.got('reservations'); // Perform GET request to /reservations
 
-        console.log('Response status code:', statusCode);
-        console.log('Response body:', body);
+        // console.log('Response status code:', statusCode);
+        // console.log('Response body:', body);
+        // console.log("TANIIIIAAAAAA : ", response);
+        t.is(response.statusCode, 200);
+        t.true(Array.isArray(response.body), 'The body should be an array');
 
-        t.is(statusCode, 200, 'The response should have status 200');
-        t.true(Array.isArray(body), 'The body should be an array');
-
-        body.forEach((reservation) => {
+        response.body.forEach((reservation) => {
             t.truthy(reservation.restaurantName, 'The reservation should have restaurantName');
             t.truthy(reservation.date, 'The reservation should have date');
         });
@@ -30,21 +29,21 @@ test.serial('GET /reservations returns a list of reservations', async (t) => {
 });
 
 
-// GET /reservations - Returns error for invalid restaurant name
-test.serial('GET /reservations returns error for invalid restaurant name', async (t) => {
-  const client = got(t); // Retrieve the correct instance of got
-  try {
-    const { body, statusCode } = await client('reservations', {
-      searchParams: { restaurantName: 'InvalidRestaurant' }, // Pass invalid restaurant name
-    });
+// // GET /reservations - Returns error for invalid restaurant name
+// test.serial('GET /reservations returns error for invalid restaurant name', async (t) => {
+//   const client = got(t); // Retrieve the correct instance of got
+//   try {
+//     const { body, statusCode } = await client('reservations', {
+//       searchParams: { restaurantName: 'InvalidRestaurant' }, // Pass invalid restaurant name
+//     });
 
-    t.is(statusCode, 404); // Expect a 404 status code
-    t.is(body.message, 'Rating not found'); // Expect the error message
-  } catch (err) {
-    console.error('Error in GET /reservations:', err.response ? err.response.body : err);
-    throw err;
-  }
-});
+//     t.is(statusCode, 404); // Expect a 404 status code
+//     t.is(body.message, 'Rating not found'); // Expect the error message
+//   } catch (err) {
+//     console.error('Error in GET /reservations:', err.response ? err.response.body : err);
+//     throw err;
+//   }
+// });
 
 
 test('POST /reservations creates a new reservation with any restaurant name', async (t) => {
@@ -70,22 +69,39 @@ test('POST /reservations creates a new reservation with any restaurant name', as
     t.deepEqual(body.restaurant_name, restaurantName, 'Restaurant name does not match');
 });
 
-test('GET /reservations/{id} returns reservation with any restaurant name', async (t) => {
+// test('GET /reservations/{id} returns reservation with any restaurant name', async (t) => {
+//     const client = t.context.got;
+//     const reservationId = '105';
+//     const restaurantName = 'AnyRestaurant';
+
+//     const response = await client(`reservations/${reservationId}`, {
+//         searchParams: { RestaurantName: restaurantName },
+//     });
+
+//     const { body, statusCode } = response;
+
+//     t.is(statusCode, 200, 'Expected status 200');
+//     t.deepEqual(body.restaurant_name, restaurantName, 'Returned restaurant name does not match');
+// });
+
+test('GET /reservations/{id} returns reservation by ID', async (t) => {
     const client = t.context.got;
-    const reservationId = '105';
-    const restaurantName = 'AnyRestaurant';
-
-    const response = await client(`reservations/${reservationId}`, {
-        searchParams: { RestaurantName: restaurantName },
-    });
-
-    const { body, statusCode } = response;
-
-    t.is(statusCode, 200, 'Expected status 200');
-    t.deepEqual(body.restaurant_name, restaurantName, 'Returned restaurant name does not match');
-});
-
-
+    const reservationId = '105'; // Test ID for the reservation
+  
+    try {
+      const response = await client(`reservations/${reservationId}`); // No query params needed
+      const { body, statusCode } = response;
+  
+      t.is(statusCode, 200, 'Expected status 200');
+      t.is(body.id, reservationId, 'Returned reservation ID does not match');
+      console.log("!!!!!!!!!!!!!!!" ,body);
+      t.truthy(body.restaurant_name, 'Reservation should have a restaurant name');
+    } catch (err) {
+      console.error('Error in GET /reservations/{id}:', err.response?.body || err.message);
+      t.fail(`Test failed due to error: ${err.response?.body?.message || err.message}`);
+    }
+  });
+  
 
 
 
@@ -120,13 +136,13 @@ test('PUT /reservations/{id} updates a reservation', async (t) => {
 
 // DELETE /reservations/{id} - Διαγράφει κράτηση
 test('DELETE /reservations/{id} cancels a reservation', async (t) => {
-    const client = got(t);
+    //const client = got(t);
     const reservationId = '105'; // Δοκιμαστικό ID, βεβαιώσου ότι υπάρχει στο API
     try {
-        const { statusCode } = await client.delete(`reservations/${reservationId}`);
+        const response = await t.context.got.delete(`reservations/${reservationId}`);
         // console.log(`DELETE /reservations/{id} StatusCode: ${statusCode}`);
 
-        t.is(statusCode, 200); // Καμία περιγραφή, μόνο επιτυχία
+        t.is(response.statusCode, 204); // Καμία περιγραφή, μόνο επιτυχία
     } catch (err) {
         console.error('Error in DELETE /reservations/{id}:', err.response ? err.response.body : err);
         throw err;

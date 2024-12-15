@@ -13,10 +13,25 @@ module.exports.ratingsGET = function ratingsGET(req, res, next, restaurant_name)
     });
 };
 
+// module.exports.ratingsIdDELETE = function ratingsIdDELETE(req, res, next, id) {
+//   Ratings.ratingsIdDELETE(id)
+//     .then(function(response) {
+//       utils.writeJson(res, {}, 200);
+//     })
+//     .catch(function(response) {
+//       utils.writeJson(res, { error: response.message }, response.statusCode || 500);
+//     });
+// };
 module.exports.ratingsIdDELETE = function ratingsIdDELETE(req, res, next, id) {
   Ratings.ratingsIdDELETE(id)
     .then(function(response) {
-      utils.writeJson(res, {}, 200);
+      if (!response) {
+        // If no record was found, respond with 404
+        utils.writeJson(res, { error: 'Rating not found' }, 404);
+      } else {
+        // If deleted successfully, respond with 204 No Content
+        res.status(204).send();
+      }
     })
     .catch(function(response) {
       utils.writeJson(res, { error: response.message }, response.statusCode || 500);

@@ -1,4 +1,3 @@
-// directions.js
 'use strict';
 
 var utils = require('../utils/writer.js');
@@ -11,10 +10,12 @@ module.exports.directionsGET = function directionsGET(req, res, next, restaurant
         // If no response, return an error message with a 404 status code
         utils.writeJson(res, { message: 'Directions not found' }, 404);
       } else {
+        // If found, return the directions
         utils.writeJson(res, response);
       }
     })
     .catch(function (error) {
+      // Handle any internal errors
       utils.writeJson(res, { message: 'Internal server error' }, 500);
     });
 };

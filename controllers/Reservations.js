@@ -3,13 +3,27 @@
 var utils = require('../utils/writer.js');
 var Reservations = require('../service/ReservationsService');
 
-module.exports.cancelReservation = function cancelReservation (req, res, next, id) {
+// module.exports.cancelReservation = function cancelReservation (req, res, next, id) {
+//   Reservations.cancelReservation(id)
+//     .then(function (response) {
+//       utils.writeJson(res, response);
+//     })
+//     .catch(function (response) {
+//       utils.writeJson(res, response);
+//     });
+// };
+
+module.exports.cancelReservation = function cancelReservation(req, res, next, id) {
   Reservations.cancelReservation(id)
-    .then(function (response) {
-      utils.writeJson(res, response);
+    .then(function(response) {
+      if (response) {
+        res.status(204).send(); // Success: No content
+      } else {
+        utils.writeJson(res, { error: 'Reservation not found' }, 404); // Not found
+      }
     })
-    .catch(function (response) {
-      utils.writeJson(res, response);
+    .catch(function(response) {
+      utils.writeJson(res, { error: response.message }, response.statusCode || 500); // Handle errors
     });
 };
 

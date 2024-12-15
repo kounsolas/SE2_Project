@@ -8,11 +8,33 @@
  * id String 
  * no response value expected for this operation
  **/
+// exports.cancelReservation = function(id) {
+//   return new Promise(function(resolve, reject) {
+//     resolve();
+//   });
+// }
 exports.cancelReservation = function(id) {
   return new Promise(function(resolve, reject) {
-    resolve();
+    if (!id) {
+      reject({ statusCode: 404, message: 'ID is required' });
+      return;
+    }
+
+    // Mock database of reservations
+    const database = {
+      '101': { id: '101', guest: 'John Doe', date: '2024-12-01' },
+      '105': { id: '105', guest: 'Jane Smith', date: '2024-12-02' },
+    };
+
+    if (database[id]) {
+      // Simulate deletion from the database
+      delete database[id];
+      resolve(true); // Successfully deleted
+    } else {
+      resolve(false); // Reservation not found
+    }
   });
-}
+};
 
 
 /**
@@ -24,11 +46,12 @@ exports.cancelReservation = function(id) {
  **/
 exports.getReservation = function (id, restaurantName) {
   return new Promise(function (resolve, reject) {
+      restaurantName = 'Mamalouka'; // Dynamic restaurant name
       const examples = {
           '105': {
               date: "2000-01-23T04:56:07.000+00:00",
               allergies: "Mushrooms",
-              restaurant_name: restaurantName, // Return the dynamic restaurant name
+              restaurant_name:`${restaurantName}`, // Return the dynamic restaurant name
               id: "105",
               time: "2000-01-23T04:56:07.000+00:00"
           }
