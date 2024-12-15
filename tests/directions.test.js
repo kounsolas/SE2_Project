@@ -34,7 +34,7 @@ test('GET /directions should return error for non-existent restaurant name', asy
     );
 
     t.is(error.response.statusCode, 404);
-    t.deepEqual(error.response.body, { message: 'directions not found' });
+    t.deepEqual(error.response.body, { message: 'Directions not found' });
   } catch (err) {
     console.error('Unexpected error:', err);
     t.fail('Unexpected error: ' + (err.response ? err.response.body : err.message));
@@ -53,7 +53,12 @@ test('GET /directions should return error if restaurantName is empty', async (t)
     );
 
     t.is(error.response.statusCode, 400); // Ελέγχουμε αν επιστρέφεται κωδικός 400 για κενό όνομα
-    t.deepEqual(error.response.body, { error: "restaurantName is required" });
+    t.deepEqual(error.response.body.errors, [
+      {
+        message: "Empty value found for query parameter 'restaurantName'",
+        path: '.query.restaurantName',
+      },
+    ]);
   } catch (err) {
     console.error('Unexpected error:', err);
     t.fail('Unexpected error: ' + (err.response ? err.response.body : err.message));
@@ -74,7 +79,7 @@ test('GET /directions should return error if restaurantName does not exist', asy
     );
 
     t.is(error.response.statusCode, 404); // Ελέγχουμε αν επιστρέφεται κωδικός 404
-    t.deepEqual(error.response.body, { error: "Restaurant not found" });
+    t.deepEqual(error.response.body, { message: "Directions not found" });
   } catch (err) {
     console.error('Unexpected error:', err);
     t.fail('Unexpected error: ' + (err.response ? err.response.body : err.message));
