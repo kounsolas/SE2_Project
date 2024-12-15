@@ -6,28 +6,42 @@
  * restaurant_name String 
  * returns List
  **/
-exports.ratingsGET = function(restaurant_name) {
-  return new Promise(function(resolve, reject) {
+
+exports.ratingsGET = function (restaurant_name) {
+  return new Promise(function (resolve, reject) {
     if (!restaurant_name) {
       reject({ statusCode: 400, message: 'Restaurant name is required' });
       return;
     }
-    
+
     // Example data, this would typically come from a database
-    var examples = [{
-      "user_id": "user32",
-      "rating": 4.5,
-      "restaurant_name": "mamalouka"
-    }, {
-      "user_id": "user33",
-      "rating": 4.0,
-      "restaurant_name": "mamalouka"
-    }];
-    
-    resolve(examples);
+    var examples = [
+      {
+        "user_id": "user32",
+        "rating": 4.5,
+        "restaurant_name": "mamalouka"
+      },
+      {
+        "user_id": "user33",
+        "rating": 4.0,
+        "restaurant_name": "mamalouka"
+      }
+    ];
+
+    // Filter ratings by restaurant_name
+    const filteredRatings = examples.filter(
+      (rating) => rating.restaurant_name.toLowerCase() === restaurant_name.toLowerCase()
+    );
+
+    if (filteredRatings.length > 0) {
+      // Resolve with the filtered ratings
+      resolve(filteredRatings);
+    } else {
+      // Reject with an error if no ratings found for the restaurant
+      reject({ statusCode: 404, message: 'Rating not found' });
+    }
   });
 };
-
 /**
  * Delete a rating
  *
@@ -100,38 +114,34 @@ exports.ratingsIdPUT = function(body, restaurant_name, id) {
  * restaurant_name String 
  * returns Ratings
  **/
-exports.ratingsPOST = function(body, restaurant_name) {
-  return new Promise(function(resolve, reject) {
+// exports.ratingsPOST = function(body, restaurant_name) {
+//   return new Promise(function(resolve, reject) {
+//     if (!restaurant_name || !body) {
+//       reject({ statusCode: 400, message: 'Restaurant name and body are required' });
+//       return;
+//     }
+
+//     // Simulate adding a new rating
+//     var newRating = {
+//       user_id: body.user_id,
+//       rating: body.rating,
+//       restaurant_name: body.restaurant_name
+//     };
+
+//     resolve(newRating);
+//   });
+// };
+
+
+exports.ratingsPOST = function (body, restaurant_name) {
+  return new Promise(function (resolve, reject) {
     if (!restaurant_name || !body) {
       reject({ statusCode: 400, message: 'Restaurant name and body are required' });
       return;
     }
 
-    // Simulate adding a new rating
-    var newRating = {
-      user_id: body.user_id,
-      rating: body.rating,
-      restaurant_name: body.restaurant_name
-    };
-
-    resolve(newRating);
-  });
-};
-
-/**
- * Create a new rating
- *
- * body Ratings Ratings object that needs to be added
- * restaurant_name String 
- * returns Ratings
- **/
-exports.ratingsPOST = function (body, restaurant_name) {
-  return new Promise(function (resolve, reject) {
-    console.log('Received Body in Service:', body);
-    console.log('Received Restaurant Name:', restaurant_name);
-
-    // Validate required fields in the body
-    const requiredFields = ['user_id', 'rating'];
+    // Validate required fields
+    const requiredFields = ['user_id', 'rating', 'restaurant_name'];
     for (const field of requiredFields) {
       if (!body[field]) {
         console.error(`Missing required field: ${field}`);
@@ -151,14 +161,14 @@ exports.ratingsPOST = function (body, restaurant_name) {
       });
     }
 
-    // Create the response object
-    const response = {
+    // Simulate adding the new rating
+    const newRating = {
       user_id: body.user_id,
       rating: body.rating,
-      restaurant_name: restaurant_name || 'mamalouka', // Default to mamalouka
+      restaurant_name: body.restaurant_name,
     };
 
-    console.log('Response:', response);
-    resolve(response);
+    console.log('Created Rating:', newRating);
+    resolve(newRating); // Return the created rating
   });
 };

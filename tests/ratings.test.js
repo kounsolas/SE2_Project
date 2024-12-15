@@ -2,26 +2,21 @@
 const test = require('ava');  //import the ava framework used for running tests
 const got = require('./init.test.js');   //import the custom got instance defined in "init.tests.js"
 
-// Test case for POST /ratings to create a new rating
-test('POST /ratings successful', async (t) => {
+test('POST /ratings allows creating rating for any restaurant', async (t) => {
   const requestBody = {
     "user_id": "user32",
     "rating": 4.5,
-    "restaurant_name": "Mamalouka"
+    "restaurant_name": "TestRestaurant"
   };
-  const restaurantName = 'Mamalouka';
+  
   try {
-    const response = await t.context.got.post(`ratings?restaurant_name=${restaurantName}`, {
+    const response = await t.context.got.post(`ratings`, {
       json: requestBody,
       responseType: 'json'
     });
 
-    // console.log('Response Status:', response.statusCode);
-    // console.log('Response Body :', response.body);   
-
     t.is(response.statusCode, 200); // Check if the status code is 200
-    t.deepEqual(response.body, requestBody);  // Assert the response body matches the request data
-    // console.log('RESPONSE: ', response.body);
+    t.deepEqual(response.body, requestBody); // Assert the response body matches the request data
   } catch (err) {
     console.error('Full Error Object:', err);
     console.error('Error Response:', err.response ? err.response.body : 'No response body');
@@ -29,7 +24,30 @@ test('POST /ratings successful', async (t) => {
   }
 });
 
-// Test case for GET /ratings with a restaurant name
+// Failure test case: POST /ratings fails when required fields are missing
+test('POST /ratings fails when required fields are missing', async (t) => {
+  const invalidRequestBody = {
+    "user_id": "user32",
+    // Missing "rating" and "restaurant_name"
+  };
+
+  const error = await t.throwsAsync(() =>
+    t.context.got.post('ratings', {
+      json: invalidRequestBody,
+      responseType: 'json'
+    })
+  );
+
+  t.is(error.response.statusCode, 400); // Assert the status code is 400
+  t.is(
+    error.response.body.message,
+    'Missing required field: rating',
+    'Error message should indicate the missing field'
+  );
+});
+
+
+// Test case for GET /ratings with a valid restaurant name
 test('GET /ratings successful', async (t) => {
   const restaurantName = "mamalouka";
 
@@ -38,15 +56,44 @@ test('GET /ratings successful', async (t) => {
       responseType: 'json'
     });
 
-    // console.log('Response Status:', response.statusCode);
-    // console.log('Response Body:', response.body);
-
     t.is(response.statusCode, 200); // Check if the status code is 200
-    t.true(Array.isArray(response.body));  // Assert the response body is an array
-    t.is(response.body[0].restaurant_name, restaurantName);  // Check if the restaurant name matches
+    t.true(Array.isArray(response.body)); // Assert the response body is an array
+    t.is(response.body[0].restaurant_name, restaurantName); // Check if the restaurant name matches
   } catch (err) {
     console.error('Error: ', err.response.body);
     t.fail('Request failed with error: ' + err.message);
+  }
+});
+
+// Test case for GET /ratings with an invalid restaurant name
+test('GET /ratings fails with non-existent restaurant_name', async (t) => {
+  const restaurantName = "Test";
+
+  try {
+    await t.context.got.get(`ratings?restaurant_name=${restaurantName}`, {
+      responseType: 'json'
+    });
+
+    t.fail('Request should have failed but did not');
+  } catch (err) {
+    t.is(err.response.statusCode, 404); // Check if the status code is 404
+    t.is(err.response.body.message, 'Rating not found'); // Check the error message
+  }
+});
+
+// Test case for GET /ratings with an empty restaurant name
+test('GET /ratings fails with empty restaurant_name', async (t) => {
+  const restaurantName = " ";
+
+  try {
+    await t.context.got.get(`ratings?restaurant_name=${restaurantName}`, {
+      responseType: 'json'
+    });
+
+    t.fail('Request should have failed but did not');
+  } catch (err) {
+    t.is(err.response.statusCode, 404); // Check if the status code is 404
+    t.is(err.response.body.message, 'Rating not found'); // Check the error message
   }
 });
 
@@ -61,8 +108,6 @@ test('GET /ratings/{id} successful', async (t) => {
       responseType: 'json',
     });
 
-    // console.log('Response Status:', response.statusCode);
-    // console.log('Response Body:', response.body);
 
     t.is(response.statusCode, 200); // Expect status 200
     t.deepEqual(response.body, {
@@ -93,9 +138,6 @@ test('PUT /ratings/{id} successful', async (t) => {
       json: requestBody,
       responseType: 'json'
     });
-
-    // console.log('Response Status:', response.statusCode);
-    // console.log('Response Body:', response.body);
 
     t.is(response.statusCode, 200); // Check if the status code is 200
     t.deepEqual(response.body, requestBody);  // Assert the response body matches the updated data
@@ -140,14 +182,7 @@ test('POST /ratings fails when required fields are missing', async (t) => {
   t.is(error.message, 'Response code 400 (Bad Request)');
 });
 
-// Test case for GET /ratings fails when restaurant_name is missing
-test('GET /ratings fails when restaurant_name is missing', async (t) => {
-  const error = await t.throwsAsync(() => t.context.got.get('ratings', {
-    responseType: 'json'
-  }));
 
-  t.is(error.message, 'Response code 400 (Bad Request)');
-});
 
 // Test case for GET /ratings/{id} fails when rating not found
 test('GET /ratings/{id} fails when rating not found', async (t) => {
@@ -159,8 +194,6 @@ test('GET /ratings/{id} fails when rating not found', async (t) => {
   t.is(error.message, 'Response code 404 (Not Found)');
 });
 
-// More tests can be added here to cover other scenarios
-
 // Negative Test Case: POST /ratings fails when required fields are missing
 test('POST /ratings fails with 400 when required fields are missing', async (t) => {
   const requestBody = {
@@ -171,17 +204,6 @@ test('POST /ratings fails with 400 when required fields are missing', async (t) 
   const error = await t.throwsAsync(() =>
     t.context.got.post('ratings?restaurant_name=Mamalouka', {
       json: requestBody,
-      responseType: 'json'
-    })
-  );
-
-  t.is(error.response.statusCode, 400); // Assert the status code is 400 (Bad Request)
-});
-
-// Negative Test Case: GET /ratings fails when restaurant_name is missing
-test('GET /ratings fails with 400 when restaurant_name is missing', async (t) => {
-  const error = await t.throwsAsync(() =>
-    t.context.got.get('ratings', {
       responseType: 'json'
     })
   );
