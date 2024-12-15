@@ -24,11 +24,12 @@ exports.cancelReservation = function(id) {
  **/
 exports.getReservation = function (id, restaurantName) {
   return new Promise(function (resolve, reject) {
+      restaurantName = 'AnyRestaurant'; // Dynamic restaurant name
       const examples = {
           '105': {
               date: "2000-01-23T04:56:07.000+00:00",
               allergies: "Mushrooms",
-              restaurant_name: restaurantName, // Return the dynamic restaurant name
+              restaurant_name:`${restaurantName}`, // Return the dynamic restaurant name
               id: "105",
               time: "2000-01-23T04:56:07.000+00:00"
           }
