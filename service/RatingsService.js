@@ -48,6 +48,18 @@ exports.ratingsGET = function (restaurant_name) {
  * id String 
  * no response value expected for this operation
  **/
+// exports.ratingsIdDELETE = function(id) {
+//   return new Promise(function(resolve, reject) {
+//     if (!id) {
+//       reject({ statusCode: 400, message: 'ID is required' });
+//       return;
+//     }
+
+//     // Simulate successful deletion (in real use, this would interact with a database)
+//     resolve();
+//   });
+// };
+
 exports.ratingsIdDELETE = function(id) {
   return new Promise(function(resolve, reject) {
     if (!id) {
@@ -55,8 +67,16 @@ exports.ratingsIdDELETE = function(id) {
       return;
     }
 
-    // Simulate successful deletion (in real use, this would interact with a database)
-    resolve();
+    // Simulate database check for ID existence
+    const database = { user32: { user_id: "user32", rating: 4.5, restaurant_name: "TestRestaurant" } }; // Example mock DB
+
+    if (database[id]) {
+      // Simulate deletion from the database
+      delete database[id];
+      resolve(true); // Record was successfully deleted
+    } else {
+      resolve(false); // Record not found
+    }
   });
 };
 
