@@ -3,7 +3,7 @@
 var utils = require('../utils/writer.js');
 var Ratings = require('../service/RatingsService');
 
-module.exports.ratingsGET = function ratingsGET(_req, res, _next, restaurant_name) {
+module.exports.ratingsGET = function ratingsGET(_, res, _next, restaurant_name) {
   Ratings.ratingsGET(restaurant_name)
     .then(function(response) {
       utils.writeJson(res, response);
@@ -13,7 +13,7 @@ module.exports.ratingsGET = function ratingsGET(_req, res, _next, restaurant_nam
     });
 };
 
-module.exports.ratingsIdDELETE = function ratingsIdDELETE(_req, res, _next, id) {
+module.exports.ratingsIdDELETE = function ratingsIdDELETE(_, res, _next, id) {
   Ratings.ratingsIdDELETE(id)
     .then(function(response) {
       if (!response) {
@@ -29,7 +29,7 @@ module.exports.ratingsIdDELETE = function ratingsIdDELETE(_req, res, _next, id) 
     });
 };
 
-module.exports.ratingsIdGET = function ratingsIdGET(_req, res, _next, restaurant_name, id) {
+module.exports.ratingsIdGET = function ratingsIdGET(_, res, _next, restaurant_name, id) {
   //console.log('Controller params:', { id, restaurant_name });
   Ratings.ratingsIdGET(id, restaurant_name)
     .then(function(response) {
@@ -40,7 +40,7 @@ module.exports.ratingsIdGET = function ratingsIdGET(_req, res, _next, restaurant
     });
 };
 
-module.exports.ratingsIdPUT = function ratingsIdPUT(_req, res, _next, body, restaurant_name, id) {
+module.exports.ratingsIdPUT = function ratingsIdPUT(_, res, _next, body, restaurant_name, id) {
   Ratings.ratingsIdPUT(body, restaurant_name, id)
     .then(function(response) {
       utils.writeJson(res, response);
@@ -50,7 +50,7 @@ module.exports.ratingsIdPUT = function ratingsIdPUT(_req, res, _next, body, rest
     });
 };
 
-module.exports.ratingsPOST = function ratingsPOST(_req, res, _next, body) {
+module.exports.ratingsPOST = function ratingsPOST(_, res, _next, body) {
   const restaurant_name = 'Mamalouka'; // Hardcoded value
   // console.log('Received Body in Controller:', body);
 
