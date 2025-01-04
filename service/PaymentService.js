@@ -9,11 +9,11 @@
  * returns Boolean
  **/
 exports.payBookingFee = function(body) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function(resolve, _) {
     const requiredFields = ['cardHolderName', 'cardNumber', 'CVC', 'expirationDate'];
 
     for (const field of requiredFields){
-      if(!body.hasOwnProperty(field)){
+      if(!Object.prototype.hasOwnProperty.call(body, field)){
         //console.log('WHATTT!!!!!');
         return; // examples['application/json'] = {error: true};//reject(new Error(`Missing required field: ${field}` ));
       }
