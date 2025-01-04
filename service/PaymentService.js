@@ -9,7 +9,7 @@
  * returns Boolean
  **/
 exports.payBookingFee = function(body) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function(resolve, _) {
     const requiredFields = ['cardHolderName', 'cardNumber', 'CVC', 'expirationDate'];
 
     for (const field of requiredFields){
