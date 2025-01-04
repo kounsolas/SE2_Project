@@ -3,7 +3,7 @@
 var utils = require('../utils/writer.js');
 var Preorder = require('../service/PreorderService');
 
-module.exports.preOrderGET = function preOrderGET (_req, res, _next) {
+module.exports.preOrderGET = function preOrderGET (_, res, _next) {
   Preorder.preOrderGET()
     .then(function (response) {
       utils.writeJson(res, response);
@@ -13,7 +13,7 @@ module.exports.preOrderGET = function preOrderGET (_req, res, _next) {
     });
 };
 
-module.exports.preOrderIdDELETE = function preOrderIdDELETE(_req, res, _next, id) {
+module.exports.preOrderIdDELETE = function preOrderIdDELETE(_, res, _next, id) {
   Preorder.preOrderIdDELETE(id)
     .then(function () {
       res.status(204).end(); // Return 204 No Content on success
@@ -23,7 +23,7 @@ module.exports.preOrderIdDELETE = function preOrderIdDELETE(_req, res, _next, id
     });
 };
 
-module.exports.preOrderIdGET = function preOrderIdGET(_req, res, _next, restaurant_name, id) {
+module.exports.preOrderIdGET = function preOrderIdGET(_, res, _next, restaurant_name, id) {
   Preorder.preOrderIdGET(id, restaurant_name)
       .then(function (response) {
           utils.writeJson(res, response); // Send the preorder as the response
@@ -57,7 +57,7 @@ module.exports.preOrderIdPUT = function preOrderIdPUT(req, res, _next, _body, re
 };
 
 
-module.exports.preOrderPOST = function preOrderPOST(_req, res, _next, body = {}) {
+module.exports.preOrderPOST = function preOrderPOST(_, res, _next, body = {}) {
   const { price, name, id, restaurant_name } = body;
 
   // Validate required fields
