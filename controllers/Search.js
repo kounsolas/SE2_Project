@@ -9,7 +9,7 @@ module.exports.searchGET = function searchGET (req, res, next) {
   if(mockError)
   {
     return res.status(500).json({error : 'Mock error'});
-    utils.writeJson(res, {message: 'Mock error'}, 500);
+    // utils.writeJson(res, {message: 'Mock error'}, 500);
   }
   Search.searchGET(req)
     .then(function (response) {
