@@ -3,7 +3,7 @@
 var utils = require('../utils/writer.js');
 var Reviews = require('../service/ReviewsService');
 
-module.exports.reviewsGET = function reviewsGET(req, res, next, restaurantName) {
+module.exports.reviewsGET = function reviewsGET(_, res, _next, restaurantName) {
   // Call the service function and pass the restaurantName parameter
   Reviews.reviewsGET(restaurantName)
     .then(function (response) {
