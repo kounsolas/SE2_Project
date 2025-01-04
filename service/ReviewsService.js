@@ -7,7 +7,7 @@
  * returns List
  **/
 exports.reviewsGET = function (restaurantName) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve, _) {
     // Mock reviews data
     const mockReviews = [
       {
