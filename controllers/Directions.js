@@ -3,7 +3,7 @@
 var utils = require('../utils/writer.js');
 var Directions = require('../service/DirectionsService');
 
-module.exports.directionsGET = function directionsGET(_, res, _next, restaurantName) {
+module.exports.directionsGET = function directionsGET(_, res, next, restaurantName) {
   Directions.directionsGET(restaurantName)
     .then(function (response) {
       if (!response) {
@@ -18,4 +18,5 @@ module.exports.directionsGET = function directionsGET(_, res, _next, restaurantN
       // Handle any internal errors
       utils.writeJson(res, { message: 'Internal server error' }, 500);
     });
+    next();
 };

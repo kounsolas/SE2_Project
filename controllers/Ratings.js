@@ -11,7 +11,7 @@ var Ratings = require('../service/RatingsService');
  * GET /ratings
  * Fetches all ratings for a specific restaurant.
  */
-module.exports.ratingsGET = function ratingsGET(_, res, _next, restaurant_name) {
+module.exports.ratingsGET = function ratingsGET(_, res, next, restaurant_name) {
   Ratings.ratingsGET(restaurant_name)
     .then(function(response) {
       utils.writeJson(res, response);
@@ -19,13 +19,14 @@ module.exports.ratingsGET = function ratingsGET(_, res, _next, restaurant_name) 
     .catch(function(response) {
       utils.writeJson(res, { error: response.message }, response.statusCode || 500);
     });
+    next();
 };
 
 /**
  * DELETE /ratings/:id
  * Deletes a specific rating by its ID.
  */
-module.exports.ratingsIdDELETE = function ratingsIdDELETE(_, res, _next, id) {
+module.exports.ratingsIdDELETE = function ratingsIdDELETE(_, res, next, id) {
   Ratings.ratingsIdDELETE(id)
     .then(function(response) {
       if (!response) {
@@ -39,13 +40,14 @@ module.exports.ratingsIdDELETE = function ratingsIdDELETE(_, res, _next, id) {
     .catch(function(response) {
       utils.writeJson(res, { error: response.message }, response.statusCode || 500);
     });
+    next();
 };
 
 /**
  * GET /ratings/:id
  * Fetches the details of a specific rating by its ID and restaurant name.
  */
-module.exports.ratingsIdGET = function ratingsIdGET(_, res, _next, restaurant_name, id) {
+module.exports.ratingsIdGET = function ratingsIdGET(_, res, next, restaurant_name, id) {
   //console.log('Controller params:', { id, restaurant_name });
   Ratings.ratingsIdGET(id, restaurant_name)
     .then(function(response) {
@@ -54,13 +56,14 @@ module.exports.ratingsIdGET = function ratingsIdGET(_, res, _next, restaurant_na
     .catch(function(response) {
       utils.writeJson(res, { error: response.message }, response.statusCode || 500);
     });
+    next();
 };
 
 /**
  * PUT /ratings/:id
  * Updates an existing rating by its ID and restaurant name.
  */
-module.exports.ratingsIdPUT = function ratingsIdPUT(_, res, _next, body, restaurant_name, id) {
+module.exports.ratingsIdPUT = function ratingsIdPUT(_, res, next, body, restaurant_name, id) {
   Ratings.ratingsIdPUT(body, restaurant_name, id)
     .then(function(response) {
       utils.writeJson(res, response);
@@ -68,13 +71,14 @@ module.exports.ratingsIdPUT = function ratingsIdPUT(_, res, _next, body, restaur
     .catch(function(response) {
       utils.writeJson(res, { error: response.message }, response.statusCode || 500);
     });
+    next();
 };
 
 /**
  * POST /ratings
  * Creates a new rating for the restaurant "Mamalouka".
  */
-module.exports.ratingsPOST = function ratingsPOST(_, res, _next, body) {
+module.exports.ratingsPOST = function ratingsPOST(_, res, next, body) {
   const restaurant_name = 'Mamalouka'; // Hardcoded value
   // console.log('Received Body in Controller:', body);
 
@@ -86,6 +90,7 @@ module.exports.ratingsPOST = function ratingsPOST(_, res, _next, body) {
       console.error('Error in Controller:', err);
       utils.writeJson(res, { message: err.message }, err.statusCode || 500);
     });
+    next();
 };
 
 //test
