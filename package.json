@@ -20,7 +20,8 @@
     "connect": "^3.2.0",
     "express": "^4.21.2",
     "js-yaml": "^3.3.0",
-    "oas3-tools": "^2.2.3"
+    "oas3-tools": "^2.2.3",
+    "body-parser": "^1.20.3"
   },
   "devDependencies": {
     "ava": "^5.3.1",
@@ -28,5 +29,20 @@
     "cypress": "^13.16.1",
     "got": "^11.8.3",
     "nodemon": "^3.1.7"
+  },
+  "overrides": {
+    "oas3-tools": {
+      "body-parser": "^1.20.3",
+      "busboy": "^1.6.0",
+      "dicer": "^0.3.1"
+    },
+    "multer": {
+      "busboy": "^1.6.0"
+    },
+    "busboy": {
+      "dicer": "^0.3.1"
+    },
+    "gopd": "^1.0.1",
+    "get-intrinsic": "^1.2.4"
   }
 }
