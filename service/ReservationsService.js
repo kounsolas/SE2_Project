@@ -138,7 +138,7 @@ exports.makeReservation = function (body, restaurantName) {
  * id String 
  * returns Reservation
  **/
-exports.updateReservation = function(_,_id) {
+exports.updateReservation = function() {
   return new Promise(function(resolve, _) {
     var examples = {};
     examples['application/json'] = {

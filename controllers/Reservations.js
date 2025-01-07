@@ -13,7 +13,7 @@ var Reservations = require('../service/ReservationsService');
 //     });
 // };
 
-module.exports.cancelReservation = function cancelReservation(_, res, _next, id) {
+module.exports.cancelReservation = function cancelReservation(_, res, next, id) {
   Reservations.cancelReservation(id)
     .then(function(response) {
       if (response) {
@@ -25,12 +25,13 @@ module.exports.cancelReservation = function cancelReservation(_, res, _next, id)
     .catch(function(response) {
       utils.writeJson(res, { error: response.message }, response.statusCode || 500); // Handle errors
     });
+    next();
 };
 
 
 
 
-module.exports.listReservations = function listReservations(req, res, _) {
+module.exports.listReservations = function listReservations(req, res) {
   const restaurantName = req.query.restaurantName; // Ανάκτηση του restaurantName από τα query parameters
   Reservations.listReservations(restaurantName)
     .then(function (response) {
@@ -42,7 +43,7 @@ module.exports.listReservations = function listReservations(req, res, _) {
 };
 
 
-module.exports.makeReservation = function makeReservation(_, res, _next, body, restaurantName) {
+module.exports.makeReservation = function makeReservation(_, res, next, body, restaurantName) {
   // Ensure the restaurant name exists in the query
   if (!restaurantName) {
       utils.writeJson(res, { message: 'Restaurant name is required' }, 400);
@@ -56,9 +57,10 @@ module.exports.makeReservation = function makeReservation(_, res, _next, body, r
       .catch(function (error) {
           utils.writeJson(res, { message: error.message || 'Internal server error' }, error.statusCode || 500);
       });
+      next();
 };
 
-module.exports.getReservation = function getReservation(_, res, _next, id, restaurantName) {
+module.exports.getReservation = function getReservation(_, res, next, id, restaurantName) {
   Reservations.getReservation(id, restaurantName)
       .then(function (response) {
           utils.writeJson(res, response);
@@ -66,11 +68,12 @@ module.exports.getReservation = function getReservation(_, res, _next, id, resta
       .catch(function (error) {
           utils.writeJson(res, { message: error.message || 'Internal server error' }, error.statusCode || 500);
       });
+      next();
 };
 
 
 
-module.exports.updateReservation = function updateReservation (_, res, _next, body, id) {
+module.exports.updateReservation = function updateReservation (_, res, next, body, id) {
   Reservations.updateReservation(body, id)
     .then(function (response) {
       utils.writeJson(res, response);
@@ -78,4 +81,5 @@ module.exports.updateReservation = function updateReservation (_, res, _next, bo
     .catch(function (response) {
       utils.writeJson(res, response);
     });
+    next();
 };

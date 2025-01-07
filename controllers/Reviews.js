@@ -3,7 +3,7 @@
 var utils = require('../utils/writer.js');
 var Reviews = require('../service/ReviewsService');
 
-module.exports.reviewsGET = function reviewsGET(_, res, _next, restaurantName) {
+module.exports.reviewsGET = function reviewsGET(_, res, next, restaurantName) {
   // Call the service function and pass the restaurantName parameter
   Reviews.reviewsGET(restaurantName)
     .then(function (response) {
@@ -12,4 +12,5 @@ module.exports.reviewsGET = function reviewsGET(_, res, _next, restaurantName) {
     .catch(function (response) {
       utils.writeJson(res, response); // Handle any errors
     });
+    next();
 };
