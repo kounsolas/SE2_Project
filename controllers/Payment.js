@@ -3,7 +3,7 @@
 var utils = require('../utils/writer.js'); // Import writer module
 var Payment = require('../service/PaymentService'); // Import Payment service module
 
-module.exports.payBookingFee = function payBookingFee (_, res, _next, body) {
+module.exports.payBookingFee = function payBookingFee (_, res, next, body) {
   //console.log('Received body: ', body);
   const { cardHolderName, cardNumber, CVC, expirationDate } = body;
   if (!cardHolderName || !cardNumber || !CVC || !expirationDate) {
@@ -46,6 +46,7 @@ module.exports.payBookingFee = function payBookingFee (_, res, _next, body) {
     .catch(function (response) {
       utils.writeJson(res, response);
     });
+    next();
 };
 // Function to handle the payment of the booking fee
 module.exports.wrongMethod = function wrongMethod(_, res) {
