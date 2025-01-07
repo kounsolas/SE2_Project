@@ -32,7 +32,12 @@
   },
   "overrides": {
     "oas3-tools": {
-      "body-parser": "^1.20.3"
+      "body-parser": "^1.20.3",
+      "busboy": "^1.6.0",
+      "dicer": "^0.3.1"
+    },
+    "multer": {
+      "busboy": "^1.6.0"
     },
     "busboy": {
       "dicer": "^0.3.1"
