@@ -138,8 +138,8 @@ exports.makeReservation = function (body, restaurantName) {
  * id String 
  * returns Reservation
  **/
-exports.updateReservation = function(body,id) {
-  return new Promise(function(resolve, reject) {
+exports.updateReservation = function(_,_id) {
+  return new Promise(function(resolve, _) {
     var examples = {};
     examples['application/json'] = {
   "date" : "2000-01-23T04:56:07.000+00:00",

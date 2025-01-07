@@ -23,7 +23,7 @@ exports.checkDuplicate = function (id, restaurant_name) {
  * returns List
  **/
 exports.preOrderGET = function() {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function(resolve) {
 
 
     // Check if there are any preorders
@@ -121,7 +121,7 @@ exports.preOrderIdPUT = function (body, restaurant_name, id) {
  * returns PreOrder
  **/
 exports.preOrderPOST = function (body) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     // Create and store the preorder
     const newPreOrder = {
       price: body.price,

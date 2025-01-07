@@ -7,7 +7,7 @@
  * returns Directions
  **/
 exports.directionsGET = function (restaurantName) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve, _) {
     const examples = {
       Mamalouka: {
         address: 'Leoforou Stratou 34',

@@ -13,7 +13,7 @@ var Reservations = require('../service/ReservationsService');
 //     });
 // };
 
-module.exports.cancelReservation = function cancelReservation(req, res, next, id) {
+module.exports.cancelReservation = function cancelReservation(_, res, _next, id) {
   Reservations.cancelReservation(id)
     .then(function(response) {
       if (response) {
@@ -30,7 +30,7 @@ module.exports.cancelReservation = function cancelReservation(req, res, next, id
 
 
 
-module.exports.listReservations = function listReservations(req, res, next) {
+module.exports.listReservations = function listReservations(req, res, _) {
   const restaurantName = req.query.restaurantName; // Ανάκτηση του restaurantName από τα query parameters
   Reservations.listReservations(restaurantName)
     .then(function (response) {
@@ -42,7 +42,7 @@ module.exports.listReservations = function listReservations(req, res, next) {
 };
 
 
-module.exports.makeReservation = function makeReservation(req, res, next, body, restaurantName) {
+module.exports.makeReservation = function makeReservation(_, res, _next, body, restaurantName) {
   // Ensure the restaurant name exists in the query
   if (!restaurantName) {
       utils.writeJson(res, { message: 'Restaurant name is required' }, 400);
@@ -58,7 +58,7 @@ module.exports.makeReservation = function makeReservation(req, res, next, body, 
       });
 };
 
-module.exports.getReservation = function getReservation(req, res, next, id, restaurantName) {
+module.exports.getReservation = function getReservation(_, res, _next, id, restaurantName) {
   Reservations.getReservation(id, restaurantName)
       .then(function (response) {
           utils.writeJson(res, response);
@@ -70,7 +70,7 @@ module.exports.getReservation = function getReservation(req, res, next, id, rest
 
 
 
-module.exports.updateReservation = function updateReservation (req, res, next, body, id) {
+module.exports.updateReservation = function updateReservation (_, res, _next, body, id) {
   Reservations.updateReservation(body, id)
     .then(function (response) {
       utils.writeJson(res, response);

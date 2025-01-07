@@ -1,9 +1,17 @@
 'use strict';
-
+/**
+ * This module serves as the controller for handling `Ratings`-related API endpoints.
+ * It delegates the processing logic to the `RatingsService` and uses `utils/writer.js` for 
+ * formatting and sending responses to the client.
+ */ 
 var utils = require('../utils/writer.js');
 var Ratings = require('../service/RatingsService');
 
-module.exports.ratingsGET = function ratingsGET(req, res, next, restaurant_name) {
+/**
+ * GET /ratings
+ * Fetches all ratings for a specific restaurant.
+ */
+module.exports.ratingsGET = function ratingsGET(_, res, _next, restaurant_name) {
   Ratings.ratingsGET(restaurant_name)
     .then(function(response) {
       utils.writeJson(res, response);
@@ -13,16 +21,11 @@ module.exports.ratingsGET = function ratingsGET(req, res, next, restaurant_name)
     });
 };
 
-// module.exports.ratingsIdDELETE = function ratingsIdDELETE(req, res, next, id) {
-//   Ratings.ratingsIdDELETE(id)
-//     .then(function(response) {
-//       utils.writeJson(res, {}, 200);
-//     })
-//     .catch(function(response) {
-//       utils.writeJson(res, { error: response.message }, response.statusCode || 500);
-//     });
-// };
-module.exports.ratingsIdDELETE = function ratingsIdDELETE(req, res, next, id) {
+/**
+ * DELETE /ratings/:id
+ * Deletes a specific rating by its ID.
+ */
+module.exports.ratingsIdDELETE = function ratingsIdDELETE(_, res, _next, id) {
   Ratings.ratingsIdDELETE(id)
     .then(function(response) {
       if (!response) {
@@ -38,7 +41,11 @@ module.exports.ratingsIdDELETE = function ratingsIdDELETE(req, res, next, id) {
     });
 };
 
-module.exports.ratingsIdGET = function ratingsIdGET(req, res, next, restaurant_name, id) {
+/**
+ * GET /ratings/:id
+ * Fetches the details of a specific rating by its ID and restaurant name.
+ */
+module.exports.ratingsIdGET = function ratingsIdGET(_, res, _next, restaurant_name, id) {
   //console.log('Controller params:', { id, restaurant_name });
   Ratings.ratingsIdGET(id, restaurant_name)
     .then(function(response) {
@@ -49,7 +56,11 @@ module.exports.ratingsIdGET = function ratingsIdGET(req, res, next, restaurant_n
     });
 };
 
-module.exports.ratingsIdPUT = function ratingsIdPUT(req, res, next, body, restaurant_name, id) {
+/**
+ * PUT /ratings/:id
+ * Updates an existing rating by its ID and restaurant name.
+ */
+module.exports.ratingsIdPUT = function ratingsIdPUT(_, res, _next, body, restaurant_name, id) {
   Ratings.ratingsIdPUT(body, restaurant_name, id)
     .then(function(response) {
       utils.writeJson(res, response);
@@ -59,7 +70,11 @@ module.exports.ratingsIdPUT = function ratingsIdPUT(req, res, next, body, restau
     });
 };
 
-module.exports.ratingsPOST = function ratingsPOST(req, res, next, body) {
+/**
+ * POST /ratings
+ * Creates a new rating for the restaurant "Mamalouka".
+ */
+module.exports.ratingsPOST = function ratingsPOST(_, res, _next, body) {
   const restaurant_name = 'Mamalouka'; // Hardcoded value
   // console.log('Received Body in Controller:', body);
 
@@ -72,3 +87,5 @@ module.exports.ratingsPOST = function ratingsPOST(req, res, next, body) {
       utils.writeJson(res, { message: err.message }, err.statusCode || 500);
     });
 };
+
+//test
