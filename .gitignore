@@ -4,3 +4,4 @@ coverage/
 .DS_Store
 cypress/videos/
 cypress/screenshots/
+cypress/downloads/
